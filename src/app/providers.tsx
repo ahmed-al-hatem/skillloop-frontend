@@ -1,0 +1,24 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import type { ReactNode } from 'react';
+import { QUERY_RETRY, QUERY_STALE_TIME } from '@/shared/constants/query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: QUERY_STALE_TIME,
+      retry: QUERY_RETRY,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+/** Global providers. The router itself is mounted in App.tsx. */
+export function AppProviders({ children }: { children: ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {import.meta.env.DEV && <ReactQueryDevtools buttonPosition="bottom-left" />}
+    </QueryClientProvider>
+  );
+}
