@@ -13,12 +13,14 @@ Done once by the repo owner. Tick the boxes as you go.
 
 **Settings → Branches → Add branch ruleset** (or classic _branch protection rule_) for `main`:
 
-- [ ] Require a pull request before merging
-  - [ ] Required approvals: **1**
-  - [ ] Dismiss stale approvals when new commits are pushed
-- [ ] Require status checks to pass → add **`check`** (appears after CI has run once) and require the branch to be up to date
-- [ ] Block force pushes · Restrict deletions
-- [ ] Do **not** add a bypass list — the rules apply to the owner too
+We use **light protection** (done ✅ 2026-11-26): it blocks mistakes without slowing the daily flow.
+
+- [x] Require a pull request before merging — required approvals: **0**
+- [x] Require status checks to pass → **`check`** — branch does _not_ have to be up to date
+- [x] Block force pushes · Restrict deletions
+- [x] Include administrators — the rules apply to the owner too
+
+Want it stricter later? Set required approvals to **1** and tick "Require branches to be up to date". Not now: with two people it makes every PR wait.
 
 ## 3. Merge settings
 
