@@ -15,12 +15,14 @@
 
 **Settings → Branches → Add branch ruleset** (أو _branch protection rule_ القديمة) على `main`:
 
-- [ ] Require a pull request before merging
-  - [ ] Required approvals: **1**
-  - [ ] Dismiss stale approvals when new commits are pushed
-- [ ] Require status checks to pass، وضيف **`check`** (بيطلع بعد ما يشتغل الـ CI أول مرة)، وخلّي الفرع لازم يكون محدّث
-- [ ] Block force pushes · Restrict deletions
-- [ ] **لا** تضيف bypass list، القواعد بتنطبق على صاحب الريبو كمان
+منستخدم **حماية خفيفة** (انعملت ✅ 2026-11-26): بتمنع الأغلاط بدون ما تبطّئ الشغل اليومي.
+
+- [x] Require a pull request before merging، وعدد الموافقات المطلوبة: **0**
+- [x] Require status checks to pass، مع **`check`**، والفرع _مو_ لازم يكون محدّث
+- [x] Block force pushes · Restrict deletions
+- [x] Include administrators، يعني القواعد بتنطبق على صاحب الريبو كمان
+
+بدك تشددها لاحقاً؟ خلّي عدد الموافقات **1** وعلّم على "Require branches to be up to date". مو هلق، لأنه مع شخصين كل PR رح يضل ناطر.
 
 ## 3. إعدادات الـ Merge
 

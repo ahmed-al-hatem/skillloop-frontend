@@ -4,10 +4,14 @@
 
 ## Who reviews whom
 
-GitHub doesn't let you approve your own PR. So: **your PRs are approved by your teammate, theirs by you.** A PR can be merged only when:
+**Your PRs are reviewed by your teammate, theirs by you** (GitHub doesn't let you approve your own PR).
 
-1. **CI is green** (the `check` job: lint + typecheck + format + build), and
-2. **one approval** from the other developer.
+`main` uses **light protection** — GitHub enforces only:
+
+1. Changes reach `main` **through a PR** (no direct push), and
+2. **CI is green** (the `check` job: lint + typecheck + format + build).
+
+An approval is **not** enforced by GitHub, to keep things fast. It's still our habit: **merge after your teammate approves**. If they're unavailable and the change is small and urgent, you may merge with a green CI — then tell them so they look at it later.
 
 ## CI
 
