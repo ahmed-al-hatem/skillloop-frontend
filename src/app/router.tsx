@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { adminRoute } from '@/features/admin';
+import { adminDashboardRoutes } from '@/features/admin-dashboard';
 import { authRoutes } from '@/features/auth';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { AuthLayout } from './layouts/AuthLayout';
@@ -13,7 +14,7 @@ export const router = createBrowserRouter([
   {
     // Admin panel (MUI, lazy). Each admin-* feature adds ONE spread line inside `children`.
     ...adminRoute,
-    children: [],
+    children: [...adminDashboardRoutes],
   },
   {
     element: <AuthLayout />,

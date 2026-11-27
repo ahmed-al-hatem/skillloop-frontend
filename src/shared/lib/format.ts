@@ -11,3 +11,10 @@ export function formatDateTime(value: string | Date, locale = DEFAULT_LOCALE) {
     new Date(value),
   );
 }
+
+/** 1240 → "1,240"; 91.25 → "91.25". Western digits, Arabic separators (dates keep the locale's digits). */
+export function formatNumber(value: number, locale = DEFAULT_LOCALE, maximumFractionDigits = 2) {
+  return new Intl.NumberFormat(locale, { numberingSystem: 'latn', maximumFractionDigits }).format(
+    value,
+  );
+}

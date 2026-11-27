@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'msw';
+import { adminDashboardHandlers } from '@/features/admin-dashboard/mocks/adminDashboard.handlers';
 
 /**
  * Each feature adds ONE import and ONE spread line below, e.g.
@@ -7,4 +8,4 @@ import type { RequestHandler } from 'msw';
  * Handlers are imported from features/<f>/mocks/ directly (not via index.ts),
  * so mock data never ends up in the production bundle.
  */
-export const handlers: RequestHandler[] = [];
+export const handlers: RequestHandler[] = [...adminDashboardHandlers];
