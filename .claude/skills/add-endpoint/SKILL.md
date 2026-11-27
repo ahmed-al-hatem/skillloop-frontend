@@ -1,25 +1,27 @@
 ---
 name: add-endpoint
-description: Wire one API endpoint end-to-end in a SkillLoop feature — Zod schema, api function, TanStack Query hook, and MSW mock handler — based on docs/05-api-contract.md. Use when the user asks to connect/fetch/call/mock an endpoint (e.g. "add GET /matches/suggestions"). Do not use for endpoints not in the contract.
+description: Wire one API endpoint end-to-end in a SkillLoop feature — Zod schema, api function, TanStack Query hook, and MSW mock handler — based on the backend's openapi.yaml (see docs/05-api-contract.md). Use when the user asks to connect/fetch/call/mock an endpoint (e.g. "add GET /categories"). Do not use for endpoints not in openapi.yaml.
 ---
 
 # add-endpoint
 
 ## 1. Find it in the contract
 
-Open `docs/05-api-contract.md` and locate the endpoint (method + path).
+The contract is the backend's `openapi.yaml`, kept locally at `local-docs/api/openapi.yaml` (gitignored). Rules in `docs/05-api-contract.md`.
 
-- **Not there?** STOP. Tell the user it must be agreed with the backend and added to the contract (both `.md` and `.ar.md`) first. Do not invent it.
-- Note the request body, response `data` shape, and status codes.
+- **File missing?** STOP. Ask the user for the latest `openapi.yaml` from the backend team.
+- **Endpoint not there?** STOP. Tell the user the backend team must add it to `openapi.yaml` first. Do not invent it.
+- Note who can call it, the request body/query, the response schema (follow its `$ref`s under `components/schemas`), and the error codes.
 
 ## 2. Schema — `features/<f>/schemas/<entity>.schema.ts`
 
-- Reuse shared schemas from `@/shared/schemas` (e.g. `UserSummarySchema`, `SkillSchema`) instead of redefining them.
+- Mirror the OpenAPI schema field by field (UUID ids → `z.string()`, points → `z.number().int()`, dates → ISO strings).
+- A schema used by 2+ features goes in `src/shared/schemas/` (create the folder if needed) instead of being redefined.
 - Export both the schema and the inferred type:
 
 ```ts
-export const MatchSchema = z.object({ id: z.string() /* … */ });
-export type Match = z.infer<typeof MatchSchema>;
+export const CategorySchema = z.object({ id: z.string() /* … */ });
+export type Category = z.infer<typeof CategorySchema>;
 ```
 
 - For request bodies, add `<Action>InputSchema` (also used by forms).
@@ -31,9 +33,9 @@ Use the shared client and validate the response:
 ```ts
 import { api } from '@/shared/api/client';
 
-export async function getSuggestions(): Promise<Match[]> {
-  const res = await api.get('/matches/suggestions');
-  return z.array(MatchSchema).parse(res.data.data);
+export async function getCategories(): Promise<Category[]> {
+  const res = await api.get('/categories');
+  return z.array(CategorySchema).parse(res.data.data);
 }
 ```
 
@@ -42,12 +44,12 @@ export async function getSuggestions(): Promise<Match[]> {
 - Keep query keys in one object per feature:
 
 ```ts
-export const matchingKeys = {
-  all: ['matching'] as const,
-  suggestions: () => [...matchingKeys.all, 'suggestions'] as const,
+export const categoriesKeys = {
+  all: ['categories'] as const,
+  list: () => [...categoriesKeys.all, 'list'] as const,
 };
-export const useSuggestions = () =>
-  useQuery({ queryKey: matchingKeys.suggestions(), queryFn: getSuggestions });
+export const useCategories = () =>
+  useQuery({ queryKey: categoriesKeys.list(), queryFn: getCategories });
 ```
 
 - Mutations: `useMutation` + `queryClient.invalidateQueries({ queryKey: <keys>.all })` on success.
@@ -55,23 +57,19 @@ export const useSuggestions = () =>
 ## 5. Mock — `features/<f>/mocks/`
 
 - Data in `<f>.data.ts` — realistic, mixed Arabic/English names, typed with the schema type.
-- Handler in `<f>.handlers.ts`, using the same envelope as the contract (`{ data, meta }` / error shape):
+- Handler in `<f>.handlers.ts`, using the same envelope as `openapi.yaml` (`{ data }`, lists `{ data, meta: { page, pageSize, total } }`, errors `{ error: { code, message, details? } }`):
 
 ```ts
-export const matchingHandlers = [
-  http.get(`${env.API_URL}/matches/suggestions`, async () => {
+export const categoriesHandlers = [
+  http.get(`${env.API_URL}/categories`, async () => {
     await delay(400);
-    return HttpResponse.json({ data: suggestions });
+    return HttpResponse.json({ data: categories });
   }),
 ];
 ```
 
 - If this is the feature's first handler, register it in `src/mocks/handlers.ts` (one line).
 
-## 6. Update the contract status
-
-In `docs/05-api-contract.md` **and** `docs/05-api-contract.ar.md`, set the endpoint's Frontend column to `mocked`.
-
-## 7. Verify
+## 6. Verify
 
 Run `npm run check`. Summarize the files touched for the user. Do not commit.

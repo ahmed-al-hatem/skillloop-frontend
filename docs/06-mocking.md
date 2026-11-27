@@ -8,7 +8,7 @@
 
 ```
 main.tsx ──(VITE_USE_MOCKS=true)──► mocks/browser.ts ──► mocks/handlers.ts
-                                                         ├─ ...matchingHandlers
+                                                         ├─ ...authHandlers
                                                          └─ ...<feature>Handlers
 ```
 
@@ -20,25 +20,28 @@ main.tsx ──(VITE_USE_MOCKS=true)──► mocks/browser.ts ──► mocks/h
 
 Easiest: `/add-endpoint` in Claude Code / Codex. By hand:
 
-**1. Data** — `features/exchanges/mocks/exchanges.data.ts`
+**1. Data** — `features/services/mocks/services.data.ts`
 
 ```ts
-import type { Exchange } from '../schemas/exchange.schema';
+import type { Service } from '../schemas/service.schema';
 
-export const exchanges: Exchange[] = [/* realistic data, mix Arabic and English names */];
+export const services: Service[] = [/* realistic data, mix Arabic and English names */];
 ```
 
-**2. Handler** — `features/exchanges/mocks/exchanges.handlers.ts`
+**2. Handler** — `features/services/mocks/services.handlers.ts`
 
 ```ts
 import { delay, http, HttpResponse } from 'msw';
 import { env } from '@/config/env';
-import { exchanges } from './exchanges.data';
+import { services } from './services.data';
 
-export const exchangesHandlers = [
-  http.get(`${env.API_URL}/exchanges`, async () => {
+export const servicesHandlers = [
+  http.get(`${env.API_URL}/services`, async () => {
     await delay(400);
-    return HttpResponse.json({ data: exchanges });
+    return HttpResponse.json({
+      data: services,
+      meta: { page: 1, pageSize: 20, total: services.length },
+    });
   }),
 ];
 ```
@@ -46,9 +49,9 @@ export const exchangesHandlers = [
 **3. Register** — one line in `src/mocks/handlers.ts`:
 
 ```ts
-import { exchangesHandlers } from '@/features/exchanges/mocks/exchanges.handlers';
+import { servicesHandlers } from '@/features/services/mocks/services.handlers';
 
-export const handlers: RequestHandler[] = [...exchangesHandlers, ...matchingHandlers];
+export const handlers: RequestHandler[] = [...authHandlers, ...servicesHandlers];
 ```
 
 ## Testing error and empty states
@@ -57,14 +60,23 @@ Temporarily change a handler (don't commit it):
 
 ```ts
 // Error
-return HttpResponse.json({ message: 'Server error', code: 'SERVER_ERROR' }, { status: 500 });
+return HttpResponse.json(
+  { error: { code: 'INTERNAL_ERROR', message: 'Server error' } },
+  { status: 500 },
+);
 // Validation
 return HttpResponse.json(
-  { message: 'Invalid', code: 'VALIDATION_ERROR', errors: { email: ['Already taken'] } },
-  { status: 422 },
+  {
+    error: {
+      code: 'VALIDATION_ERROR',
+      message: 'Some fields are invalid',
+      details: [{ field: 'email', message: 'Already taken' }],
+    },
+  },
+  { status: 400 },
 );
 // Empty list
-return HttpResponse.json({ data: [] });
+return HttpResponse.json({ data: [], meta: { page: 1, pageSize: 20, total: 0 } });
 ```
 
 ## Rules

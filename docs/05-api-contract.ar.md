@@ -4,96 +4,47 @@
 
 [English](05-api-contract.md) · **العربية**
 
-الاتفاق بين الفرونت والباك. **ما منستدعي إلا الـ endpoints المكتوبة هون.** أي endpoint جديد منتفق عليه مع الباك إند أولاً، بعدين منضيفه هون (باللغتين)، وبعدين منبنيه.
+الاتفاق بين الفرونت والباك هو **ملف OpenAPI** تبع فريق الباك إند (`openapi.yaml`، نسخة API v1). فيه كل الـ endpoints: الطلب والرد والأخطاء. **ما منستدعي إلا الـ endpoints الموجودة بهالملف.** إذا شاشة بدها شي مو موجود، اطلب من فريق الباك يضيفه لـ `openapi.yaml` أول، وبعدين ابنيه.
 
-## الاصطلاحات
+## وين لاقيه
 
-- **العنوان الأساسي:** `VITE_API_URL` (مثلاً `http://localhost:8000/api/v1`)
-- **المصادقة:** `Authorization: Bearer <token>`، بينضاف تلقائياً من `shared/api/client.ts`
-- **JSON** بالطلب والرد، أسماء الحقول `camelCase`، التواريخ ISO 8601 بتوقيت UTC (`2026-11-25T10:00:00Z`)، والـ IDs نصوص.
+- اطلب آخر نسخة من `openapi.yaml` من فريق الباك، وخلّي نسخة عندك بـ `local-docs/api/openapi.yaml`. مجلد `local-docs/` موجود بـ `.gitignore`، يعني **ما بينرفع** على هالريبو.
+- لتقراه بسهولة، افتحه بـ VS Code مع إضافة OpenAPI preview، أو الصقه بـ https://editor.swagger.io.
+- كل endpoint مكتوب جنبه مين بيقدر يستدعيه (أي حدا / عضو / عضو موثّق / أدمن) وأي متطلب من الـ SRS بينفّذ.
 
-### النجاح
+## الأساسيات (من `openapi.yaml`)
 
-```json
-{ "data": { ... }, "meta": { ... } }
-```
-
-### قائمة مقسّمة لصفحات
-
-```json
-{
-  "data": [ ... ],
-  "meta": { "page": 1, "perPage": 20, "total": 57, "totalPages": 3 }
-}
-```
-
-الـ Query: `?page=1&perPage=20`. النوع بالفرونت: `Paginated<T>` أو `paginatedSchema(item)`.
+| الموضوع         | القاعدة                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| العنوان الأساسي | `VITE_API_URL` وبينتهي بـ `/api/v1` (مثلاً `http://localhost:3000/api/v1`)                         |
+| الصيغة          | JSON، و`multipart/form-data` بس لرفع الصور                                                        |
+| المصادقة        | `Authorization: Bearer <accessToken>` (15 دقيقة)، وبيتجدد بـ `POST /auth/refresh`                 |
+| الـ IDs         | نصوص UUID                                                                                         |
+| التواريخ        | ISO 8601 بتوقيت UTC، مثلاً `2026-11-27T18:30:00Z`                                                  |
+| اللغة           | `Accept-Language: ar` أو `en` (رسائل الأخطاء بتجي مترجمة)                                         |
+| القوائم         | `?page=1&pageSize=20` (أكتر شي 50) ← `{ "data": [...], "meta": { "page", "pageSize", "total" } }` |
+| النقاط          | دايماً أرقام صحيحة. الأرصدة والأسعار بيحسبها الباك إند، والفرونت بس بيعرضها                        |
 
 ### الخطأ (كل 4xx و5xx)
 
 ```json
 {
-  "message": "The given data was invalid.",
-  "code": "VALIDATION_ERROR",
-  "errors": { "email": ["The email has already been taken."] }
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Some fields are invalid",
+    "details": [{ "field": "phone", "message": "Phone number is already used" }]
+  }
 }
 ```
 
-`errors` بتجي بس مع 422. بالفرونت أي فشل بيتحوّل لـ `ApiRequestError` (`message`، `code`، `status`، `errors`).
+الـ `code` ثابت، فاستخدمه بالكود. الـ `message` مترجم جاهز، فاعرضه للمستخدم. والـ `details` بيجي بس مع `VALIDATION_ERROR`، وفيه عنصر لكل حقل. القائمة الكاملة للأكواد موجودة بأول `openapi.yaml`.
 
-| الحالة | المعنى                       | شو بيعمل الفرونت                     |
-| ------ | ---------------------------- | ------------------------------------ |
-| 401    | مو مسجّل دخول أو انتهت الجلسة | بيمسح التوكن وبيشغّل handler الـ auth |
-| 403    | غير مسموح                    | بيعرض رسالة                          |
-| 404    | مو موجود                     | `EmptyState` أو صفحة غير موجود       |
-| 422    | خطأ بالبيانات                | بيعرض `errors` تحت حقول الفورم       |
-| 5xx    | خطأ بالسيرفر                 | `ErrorState` مع زر إعادة المحاولة    |
+> ⚠️ ملفات `src/shared/api/client.ts` و`src/shared/api/types.ts` لسا ماشيين على المسودة الأولى (خطأ مسطّح فيه `errors`، و`perPage`). لازم نظبطهم على هالصيغة لما نبني أول endpoint حقيقي (auth).
 
-## الـ Endpoints
+## بناء endpoint
 
-حالة الفرونت: `—` ما بلّشنا · `mocked` في MSW handler · `live` مجرّب مع الباك إند الحقيقي.
-
-| Method | Path                   | Feature  | الـ `data` بالرد | حالة الباك | الفرونت |
-| ------ | ---------------------- | -------- | ---------------- | ---------- | ------- |
-| GET    | `/matches/suggestions` | matching | `Match[]`        | draft      | mocked  |
-
-> `GET /matches/suggestions` **مثال مبدئي** لتوضيح الشكل، لازم نأكده مع فريق الباك إند.
-> ضيفوا الباقي (auth، profile، exchanges، time-bank، reviews) أول ما ينتفق عليه.
-
-## تفاصيل الـ Endpoints
-
-### GET `/matches/suggestions`
-
-الشركاء المقترحين للمستخدم الحالي.
-
-```json
-{
-  "data": [
-    {
-      "id": "m1",
-      "partner": { "id": "u1", "name": "Sara", "avatarUrl": null, "rating": 4.8 },
-      "theyOffer": [{ "id": "s1", "name": "Photoshop", "category": "design" }],
-      "theyWant": [{ "id": "s2", "name": "React", "category": "programming" }],
-      "score": 92
-    }
-  ]
-}
-```
-
-الـ Schema: `features/matching/schemas/match.schema.ts`.
-
-## إضافة endpoint (قالب)
-
-```md
-### METHOD `/path`
-
-شو بيعمل، ومين بيقدر يستدعيه.
-
-Request body / query: …
-Response `data`: … (مثال JSON)
-Errors: 404 …، 422 …
-```
-
-بعدها: ضيف السطر عالجدول، ثم `/add-endpoint` (أو اتبع [06 · البيانات الوهمية](06-mocking.ar.md))، ثم غيّر حالة الفرونت لـ `mocked`.
+1. لاقيه بـ `openapi.yaml`.
+2. شغّل `/add-endpoint` بـ Claude Code أو Codex، أو امشِ على [06 · البيانات الوهمية](06-mocking.ar.md). هيك بينكتب الـ Zod schema (مطابق لـ schema الـ OpenAPI)، ودالة الـ api، والـ query hook، والـ mock تبع MSW.
+3. لما يشتغل الباك الحقيقي، جرّب مع `VITE_USE_MOCKS=false`.
 
 </div>

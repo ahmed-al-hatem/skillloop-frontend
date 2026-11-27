@@ -4,7 +4,7 @@
 
 [English](02-project-structure.md) · **العربية**
 
-الكود مقسوم **حسب الميزة (feature)** مو حسب نوع الملف. كل شي بيخص "matching" موجود بـ `src/features/matching/`.
+الكود مقسوم **حسب الميزة (feature)** مو حسب نوع الملف. كل شي بيخص "auth" موجود بـ `src/features/auth/`.
 
 ```
 src/
@@ -12,21 +12,15 @@ src/
 │   ├── App.tsx
 │   ├── providers.tsx     # QueryClientProvider (+ devtools وقت التطوير)
 │   ├── router.tsx        # بيجمع routes كل feature
-│   └── layouts/          # MainLayout (هيدر + تنقل)، AuthLayout (كرت بالنص)
+│   └── layouts/          # MainLayout (هيدر)، AuthLayout (كرت بالنص)
 ├── features/
-│   ├── auth/             # تسجيل، دخول، session
-│   ├── profile/          # المهارات اللي بعلّمها واللي بدي اتعلمها
-│   ├── matching/         # اقتراح الشركاء  ← مثال مرجعي كامل
-│   ├── exchanges/        # اتفاقية التبادل + الجلسات
-│   ├── time-bank/        # الرصيد وسجل الحركات
-│   └── reviews/          # التقييم والشارات
+│   └── auth/             # هيكل مجلدات فاضي، والـ features منبنيها من Figma و openapi.yaml
 ├── shared/               # مشترك للكل، وما بيعرف شي عن الـ features
 │   ├── api/              # client.ts (axios + interceptors)، types.ts (ApiResponse, ApiError, Paginated)
 │   ├── components/       # EmptyState, ErrorState, PageHeader, ErrorBoundary
 │   │   └── ui/           # Button, Input, Label, Card, Badge, Spinner
 │   ├── hooks/            # useDebounce, useMediaQuery
-│   ├── lib/              # cn(), formatDate(), formatHours(), tokenStorage
-│   ├── schemas/          # UserSummarySchema, SkillSchema
+│   ├── lib/              # cn(), formatDate(), formatDateTime(), tokenStorage
 │   └── constants/        # ROUTES، إعدادات الـ query
 ├── mocks/                # browser.ts (setupWorker)، handlers.ts (بيجمع handlers الـ features)
 ├── config/env.ts         # قراءة env والتحقق منها بـ Zod
@@ -36,22 +30,23 @@ src/
 
 ## من جوا الـ feature
 
+هلق `features/auth/` فيه بس مجلدات فاضية (`.gitkeep`). لما ننبنيه رح يصير هيك:
+
 ```
-features/matching/
+features/auth/
 ├── api/
-│   ├── matching.api.ts       # دوال الطلبات فقط (axios + تحقق Zod)
-│   └── matching.queries.ts   # useSuggestions() بـ TanStack Query + مفاتيح الـ query
+│   ├── auth.api.ts           # دوال الطلبات فقط (axios + تحقق Zod)
+│   └── auth.queries.ts       # useLogin() / useCurrentUser() بـ TanStack Query + مفاتيح الـ query
 ├── components/
-│   ├── PartnerCard.tsx
-│   └── SuggestionsList.tsx
+│   └── LoginForm.tsx
 ├── pages/
-│   └── MatchingPage.tsx
+│   └── LoginPage.tsx
 ├── schemas/
-│   └── match.schema.ts       # MatchSchema + type Match
+│   └── auth.schema.ts        # LoginSchema + type Login
 ├── mocks/
-│   ├── matching.data.ts
-│   └── matching.handlers.ts
-├── routes.tsx                # export const matchingRoutes
+│   ├── auth.data.ts
+│   └── auth.handlers.ts
+├── routes.tsx                # export const authRoutes
 └── index.ts                  # الواجهة العامة: شو مسموح للباقي يستورد
 ```
 
@@ -60,10 +55,10 @@ features/matching/
 ## القواعد الأربعة (ESLint بيفرض أول قاعدتين)
 
 1. **`shared/` ما بيستورد من `features/` أبداً.**
-2. **الـ feature بتستورد من feature تانية بس عن طريق `index.ts` تبعها:** `import { useSuggestions } from '@/features/matching'` ✅، أما `'@/features/matching/api/matching.queries'` ❌. جوا نفس الـ feature استخدم استيراد نسبي (`../schemas/match.schema`).
+2. **الـ feature بتستورد من feature تانية بس عن طريق `index.ts` تبعها:** `import { useCurrentUser } from '@/features/auth'` ✅، أما `'@/features/auth/api/auth.queries'` ❌. جوا نفس الـ feature استخدم استيراد نسبي (`../schemas/auth.schema`).
 3. **الملفات المركزية كل feature إلها سطر واحد.** `src/app/router.tsx` و`src/mocks/handlers.ts` بس بيجمعوا:
    ```ts
-   children: [...exchangesRoutes, ...matchingRoutes, ...profileRoutes /* أبجدياً */];
+   children: [...authRoutes, ...bookingsRoutes, ...servicesRoutes /* أبجدياً */];
    ```
    هيك الـ conflict نادر، وإذا صار بيكون سطر واحد.
 4. **مجلد `mocks/` ما بينصدّر من `index.ts` تبع الـ feature.** ملف `src/mocks/handlers.ts` بيستورد الـ handlers مباشرة، لتضل البيانات الوهمية برّا نسخة الإنتاج.
@@ -75,7 +70,7 @@ features/matching/
 | صفحة أو مكوّن بيستخدمه feature واحد  | `features/<f>/pages/` أو `components/`   |
 | مكوّن واجهة أساسي (زر، modal…) للكل  | `shared/components/ui/` بـ PR صغير لحاله |
 | طلب للباك إند                       | `features/<f>/api/<f>.api.ts`            |
-| schema بيستخدمها 2 features أو أكتر | `shared/schemas/`                        |
+| schema بيستخدمها 2 features أو أكتر | `shared/schemas/` (اعمله وقت الحاجة)     |
 | hook أو دالة مساعدة عامة            | `shared/hooks/` أو `shared/lib/`         |
 | رابط (URL) جديد                     | `shared/constants/routes.ts` (`ROUTES`)  |
 

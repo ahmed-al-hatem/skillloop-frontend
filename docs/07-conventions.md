@@ -6,15 +6,15 @@ Formatting is automatic (Prettier + EditorConfig, format on save). These are the
 
 ## Naming
 
-| Thing                 | Style                    | Example                              |
-| --------------------- | ------------------------ | ------------------------------------ |
-| Component file + name | PascalCase               | `PartnerCard.tsx` → `PartnerCard`    |
-| Props type            | `<Component>Props`       | `PartnerCardProps`                   |
-| Hook                  | `useX`, camelCase        | `useSuggestions`                     |
-| Other files           | kebab-case + role suffix | `match.schema.ts`, `matching.api.ts` |
-| Feature folder        | kebab-case               | `time-bank/`                         |
-| Zod schema / type     | `XSchema` / `X`          | `MatchSchema` / `Match`              |
-| Constants             | UPPER_SNAKE_CASE         | `ROUTES`, `QUERY_STALE_TIME`         |
+| Thing                 | Style                    | Example                                |
+| --------------------- | ------------------------ | -------------------------------------- |
+| Component file + name | PascalCase               | `ServiceCard.tsx` → `ServiceCard`      |
+| Props type            | `<Component>Props`       | `ServiceCardProps`                     |
+| Hook                  | `useX`, camelCase        | `useServices`                          |
+| Other files           | kebab-case + role suffix | `service.schema.ts`, `services.api.ts` |
+| Feature folder        | kebab-case               | `admin-members/`                       |
+| Zod schema / type     | `XSchema` / `X`          | `MatchSchema` / `Match`                |
+| Constants             | UPPER_SNAKE_CASE         | `ROUTES`, `QUERY_STALE_TIME`           |
 
 - **Named exports only** (`export function X`), no `export default`.
 - One component per file (small private helpers in the same file are fine).
@@ -24,7 +24,7 @@ Formatting is automatic (Prettier + EditorConfig, format on save). These are the
 - Types come from Zod: `export type Match = z.infer<typeof MatchSchema>`. Don't write the same type by hand.
 - No `any`. If you really don't know the type, use `unknown` and parse it.
 - Server data lives in TanStack Query — don't copy it into `useState`.
-- Query keys: one object per feature (`matchingKeys`) — see `features/matching/api/matching.queries.ts`.
+- Query keys: one object per feature (`servicesKeys`) in `features/<f>/api/<f>.queries.ts`.
 
 ## Forms
 
@@ -60,7 +60,7 @@ Icons that point a direction (arrows, chevrons) need `rtl:rotate-180`.
 
 ## UI states
 
-Every screen that loads data handles: **loading** (`Spinner`) · **error** (`ErrorState` with retry) · **empty** (`EmptyState`). See `features/matching/components/SuggestionsList.tsx`.
+Every screen that loads data handles: **loading** (`Spinner`) · **error** (`ErrorState` with retry) · **empty** (`EmptyState`).
 
 ## shadcn/ui (optional)
 

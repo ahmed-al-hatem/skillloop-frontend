@@ -28,7 +28,7 @@
 feat(matching): add partner card
 fix(auth): show server error on login
 chore: add msw handlers for exchanges
-docs: describe time-bank endpoints
+docs: describe wallet endpoints
 ```
 
 `type(scope): what, in imperative, lowercase`. The scope is the feature folder name.

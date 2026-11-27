@@ -2,7 +2,7 @@
 
 **English** · [العربية](02-project-structure.ar.md)
 
-Code is split **by feature**, not by file type. Everything about "matching" lives in `src/features/matching/`.
+Code is split **by feature**, not by file type. Everything about "auth" lives in `src/features/auth/`.
 
 ```
 src/
@@ -10,21 +10,15 @@ src/
 │   ├── App.tsx
 │   ├── providers.tsx     # QueryClientProvider (+ devtools in dev)
 │   ├── router.tsx        # collects the routes of every feature
-│   └── layouts/          # MainLayout (header + nav), AuthLayout (centered card)
+│   └── layouts/          # MainLayout (header), AuthLayout (centered card)
 ├── features/
-│   ├── auth/             # register, login, session
-│   ├── profile/          # skills I teach / skills I want to learn
-│   ├── matching/         # partner suggestions  ← fully wired reference example
-│   ├── exchanges/        # exchange agreement + sessions
-│   ├── time-bank/        # balance + transactions
-│   └── reviews/          # ratings + badges
+│   └── auth/             # empty folder skeleton — features are built from Figma + openapi.yaml
 ├── shared/               # shared by everyone, knows nothing about features
 │   ├── api/              # client.ts (axios + interceptors), types.ts (ApiResponse, ApiError, Paginated)
 │   ├── components/       # EmptyState, ErrorState, PageHeader, ErrorBoundary
 │   │   └── ui/           # Button, Input, Label, Card, Badge, Spinner
 │   ├── hooks/            # useDebounce, useMediaQuery
-│   ├── lib/              # cn(), formatDate(), formatHours(), tokenStorage
-│   ├── schemas/          # UserSummarySchema, SkillSchema
+│   ├── lib/              # cn(), formatDate(), formatDateTime(), tokenStorage
 │   └── constants/        # ROUTES, query defaults
 ├── mocks/                # browser.ts (setupWorker), handlers.ts (collects feature handlers)
 ├── config/env.ts         # reads + validates env with Zod
@@ -34,22 +28,23 @@ src/
 
 ## Inside a feature
 
+Today `features/auth/` has only empty folders (`.gitkeep`). When it is built, it will look like this:
+
 ```
-features/matching/
+features/auth/
 ├── api/
-│   ├── matching.api.ts       # request functions only (axios + Zod parse)
-│   └── matching.queries.ts   # useSuggestions() with TanStack Query + query keys
+│   ├── auth.api.ts           # request functions only (axios + Zod parse)
+│   └── auth.queries.ts       # useLogin() / useCurrentUser() with TanStack Query + query keys
 ├── components/
-│   ├── PartnerCard.tsx
-│   └── SuggestionsList.tsx
+│   └── LoginForm.tsx
 ├── pages/
-│   └── MatchingPage.tsx
+│   └── LoginPage.tsx
 ├── schemas/
-│   └── match.schema.ts       # MatchSchema + type Match
+│   └── auth.schema.ts        # LoginSchema + type Login
 ├── mocks/
-│   ├── matching.data.ts
-│   └── matching.handlers.ts
-├── routes.tsx                # export const matchingRoutes
+│   ├── auth.data.ts
+│   └── auth.handlers.ts
+├── routes.tsx                # export const authRoutes
 └── index.ts                  # public API: what other code may import
 ```
 
@@ -58,10 +53,10 @@ Create only the folders you need. A small feature can use files (`types.ts`) ins
 ## The 4 rules (ESLint enforces 1 and 2)
 
 1. **`shared/` never imports from `features/`.**
-2. **A feature imports another feature only through its `index.ts`:** `import { useSuggestions } from '@/features/matching'` ✅ — `'@/features/matching/api/matching.queries'` ❌. Inside the same feature use relative imports (`../schemas/match.schema`).
+2. **A feature imports another feature only through its `index.ts`:** `import { useCurrentUser } from '@/features/auth'` ✅ — `'@/features/auth/api/auth.queries'` ❌. Inside the same feature use relative imports (`../schemas/auth.schema`).
 3. **Central files get one line per feature.** `src/app/router.tsx` and `src/mocks/handlers.ts` only collect:
    ```ts
-   children: [...exchangesRoutes, ...matchingRoutes, ...profileRoutes /* alphabetical */];
+   children: [...authRoutes, ...bookingsRoutes, ...servicesRoutes /* alphabetical */];
    ```
    So merge conflicts are rare — and if one happens, it is one line.
 4. **`mocks/` is never exported from a feature's `index.ts`.** `src/mocks/handlers.ts` imports handlers directly, so fake data stays out of the production bundle.
@@ -73,7 +68,7 @@ Create only the folders you need. A small feature can use files (`types.ts`) ins
 | A page / component used by one feature          | `features/<f>/pages/` or `components/`        |
 | A UI primitive (button, modal…) used everywhere | `shared/components/ui/` — in its own small PR |
 | A request to the backend                        | `features/<f>/api/<f>.api.ts`                 |
-| A schema used by 2+ features                    | `shared/schemas/`                             |
+| A schema used by 2+ features                    | `shared/schemas/` (create it when needed)     |
 | A generic hook / helper                         | `shared/hooks/` / `shared/lib/`               |
 | A new URL                                       | `shared/constants/routes.ts` (`ROUTES`)       |
 

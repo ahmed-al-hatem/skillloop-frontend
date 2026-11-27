@@ -21,7 +21,7 @@ cp .env.example .env        # PowerShell: Copy-Item .env.example .env
 npm run dev
 ```
 
-افتح http://localhost:5173، رح توصل لصفحة **/matching** وفيها 3 كروت شركاء وهميين. هيك بتعرف إنه React والراوتر وTanStack Query وaxios وMSW كلهم شغالين.
+افتح http://localhost:5173، رح تشوف هيدر التطبيق وصفحة مؤقتة مكتوب فيها "قريباً". الشاشات منبنيها من تصاميم Figma، feature ورا التانية.
 
 ## متغيرات البيئة
 

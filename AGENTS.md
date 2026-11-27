@@ -6,7 +6,9 @@ Human docs live in `docs/` (start at `docs/README.md`).
 
 ## Project
 
-SkillLoop is a skill-for-skill exchange platform: members list skills they can teach and skills they want to learn, the app suggests partners, they agree on an exchange and sessions, every hour taught is credited to a **time bank**, and both sides review each other.
+SkillLoop is a skill-exchange platform where people trade skills using **points** instead of money: members offer services, others book them with points, the points are held until the work is confirmed, and both sides review each other. The full model is in the backend's SRS and `openapi.yaml`.
+
+Screens are built from the **Figma designs**. Until a design arrives for a feature, there is no screen for it — don't invent UI.
 
 This repo is the **web frontend only**. The API is built by a separate backend team.
 
@@ -29,7 +31,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 
 1. Code is organized by feature: `src/features/<feature>/` with only the subfolders it needs (`api/`, `components/`, `hooks/`, `pages/`, `schemas/`, `mocks/`) plus `routes.tsx` and `index.ts`. A small feature may use single files (`types.ts`) instead of folders.
 2. `src/shared/` never imports from `src/features/`.
-3. A feature imports another feature **only** through its `index.ts` (`@/features/matching`), never `@/features/matching/components/...`. Inside a feature use relative imports.
+3. A feature imports another feature **only** through its `index.ts` (`@/features/auth`), never `@/features/auth/components/...`. Inside a feature use relative imports.
 4. Central files — `src/app/router.tsx` and `src/mocks/handlers.ts` — get **one import + one spread line per feature**, kept alphabetical. No feature logic there.
 5. `src/app/` only assembles the app (providers, router, layouts).
 6. Use the `@/` alias for imports from `src/`.
@@ -41,9 +43,9 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 - Types come from Zod: write the schema, export `type X = z.infer<typeof XSchema>`. No duplicate hand-written types.
 - Validate every API response with its schema inside the api function.
 - Never import mock data into components. Fake data goes through MSW handlers in `features/<f>/mocks/`.
-- The API contract is `docs/05-api-contract.md`. **Never invent an endpoint.** If one is missing, stop and tell the user to agree it with the backend and add it to the contract first.
-- Time-bank balances and match scores are computed by the backend. The frontend only displays them.
-- Forms: react-hook-form + `zodResolver(schema)`. Show server field errors from `ApiRequestError.errors`.
+- The API contract is the backend's `openapi.yaml` (local copy in `local-docs/api/openapi.yaml`, gitignored; rules in `docs/05-api-contract.md`). **Never invent an endpoint.** If one is missing, stop and tell the user the backend team must add it to `openapi.yaml` first.
+- Point balances, prices and match scores are computed by the backend. The frontend only displays them.
+- Forms: react-hook-form + `zodResolver(schema)`. Show server field errors from `ApiRequestError` (the API sends them in `error.details`; `shared/api/client.ts` still follows the old draft shape and must be aligned when the first real endpoint is built).
 
 ## UI rules
 

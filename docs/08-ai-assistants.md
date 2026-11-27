@@ -33,7 +33,7 @@ In Codex, ask in words ("start task 12", "finish the task") or use `$start-task`
 ```
 /start-task 12                   → you're on feat/12-matching-list
 "build the partner card from the issue"
-/add-endpoint GET /matches/suggestions
+/add-endpoint GET /categories
 npm run dev → look at it in the browser
 /finish-task                     → PR opened, teammate requested as reviewer
 ```

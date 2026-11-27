@@ -2,7 +2,7 @@
 
 **English** · [العربية](README.ar.md)
 
-SkillLoop is a skill-for-skill exchange platform: teach what you know, learn what you want, and every hour you teach goes into your **time bank**. This repo is the web frontend.
+SkillLoop is a skill-for-skill exchange platform: offer what you know, book what you want to learn, and pay with **points** instead of money. This repo is the web frontend; its screens are built from the Figma designs.
 
 **Stack:** Vite · React · TypeScript · Tailwind CSS · React Router · TanStack Query · axios · Zod · react-hook-form · MSW
 
