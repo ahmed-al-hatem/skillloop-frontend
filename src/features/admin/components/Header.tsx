@@ -14,7 +14,7 @@ export function Header() {
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-between',
-        pt: 1.5,
+        pt: 3,
       }}
     >
       <NavbarBreadcrumbs />

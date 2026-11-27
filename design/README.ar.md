@@ -14,8 +14,11 @@
 | فوسفوري | `#B8ED50` | `secondary`                                | الأزرار الثانوية، التمييز، الشارات                       |
 | رمادي   | `#2D2B35` | `foreground`، `secondary-foreground`       | النصوص، الأسطح الغامقة (الهيدر/الفوتر، الواجهة الرئيسية) |
 | أبيض    | `#FFFFFF` | `background`، `card`، `primary-foreground` | خلفية الصفحة، الكروت، النص فوق البنفسجي                  |
+| كحلي    | `#0B2349` | `background` جوا `data-theme="admin-dark"` | الأسطح الغامقة: خلفية لوحة الإدارة                       |
 
-بقية الـ tokens مخلوطة من الألوان الأربعة بـ [`src/styles/index.css`](../src/styles/index.css): `muted` (رمادي 4%)، `muted-foreground` (رمادي 72%)، `accent` (بنفسجي 8%، لخلفية الـ hover)، `border` (رمادي 12%)، `input` (رمادي 16%). الأحمر `destructive` مو من ألوان الهوية، بس خليناه للأخطاء.
+لوحة الإدارة غامقة: `data-theme="admin-dark"` (بـ `index.css`) بيحوّل الـ tokens لأسطح كحلية ونص أبيض، وثيم MUI بيستخدم نفس الألوان. درجات الكحلي من لوحة الهوية: `#0B2349` `#163F80` `#1F4C94` `#275DB3` `#3D78D7`.
+
+بقية الـ tokens مخلوطة من ألوان الهوية بـ [`src/styles/index.css`](../src/styles/index.css): `muted` (رمادي 4%)، `muted-foreground` (رمادي 72%)، `accent` (بنفسجي 8%، لخلفية الـ hover)، `border` (رمادي 12%)، `input` (رمادي 16%). الأحمر `destructive` مو من ألوان الهوية، بس خليناه للأخطاء.
 
 **القواعد**
 

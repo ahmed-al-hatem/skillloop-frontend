@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import { AdminBrand } from './AdminBrand';
 import { BackToSiteLink } from './BackToSiteLink';
@@ -17,17 +16,15 @@ export function SideMenuMobile({ open, onClose }: SideMenuMobileProps) {
       anchor="left"
       open={open}
       onClose={onClose}
-      sx={{ [`& .${drawerClasses.paper}`]: { width: 260, maxWidth: '80dvw' } }}
+      sx={{ [`& .${drawerClasses.paper}`]: { width: 272, maxWidth: '80dvw' } }}
     >
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
         <AdminBrand />
       </Box>
-      <Divider />
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, px: 1 }}>
         <MenuContent onNavigate={onClose} />
       </Box>
-      <Divider />
-      <Box sx={{ p: 1 }}>
+      <Box sx={{ p: 2 }}>
         <BackToSiteLink />
       </Box>
     </Drawer>

@@ -6,14 +6,17 @@ The brand identity and how to use it in the frontend. The designer's original fi
 
 ## Colors
 
-| Name     | Hex       | Token                                      | Use it for                                     |
-| -------- | --------- | ------------------------------------------ | ---------------------------------------------- |
-| Purple   | `#8038FF` | `primary`, `ring`                          | Main buttons, links, focus ring, active states |
-| Lime     | `#B8ED50` | `secondary`                                | Secondary buttons, highlights, badges          |
-| Charcoal | `#2D2B35` | `foreground`, `secondary-foreground`       | Text, dark surfaces (header/footer, hero)      |
-| White    | `#FFFFFF` | `background`, `card`, `primary-foreground` | Page background, cards, text on purple         |
+| Name     | Hex       | Token                                         | Use it for                                     |
+| -------- | --------- | --------------------------------------------- | ---------------------------------------------- |
+| Purple   | `#8038FF` | `primary`, `ring`                             | Main buttons, links, focus ring, active states |
+| Lime     | `#B8ED50` | `secondary`                                   | Secondary buttons, highlights, badges          |
+| Charcoal | `#2D2B35` | `foreground`, `secondary-foreground`          | Text, dark surfaces (header/footer, hero)      |
+| White    | `#FFFFFF` | `background`, `card`, `primary-foreground`    | Page background, cards, text on purple         |
+| Navy     | `#0B2349` | `background` inside `data-theme="admin-dark"` | Dark surfaces: the admin panel background      |
 
-These derived tokens are mixed from the four colors in [`src/styles/index.css`](../src/styles/index.css): `muted` (charcoal 4%), `muted-foreground` (charcoal 72%), `accent` (purple 8%, for hover backgrounds), `border` (charcoal 12%), `input` (charcoal 16%). `destructive` (red) is not a brand color but is kept for errors.
+The admin panel is dark: `data-theme="admin-dark"` (in `index.css`) remaps the tokens to navy surfaces with white text, and the MUI theme uses the same colors. Navy shades from the brand board: `#0B2349` `#163F80` `#1F4C94` `#275DB3` `#3D78D7`.
+
+These derived tokens are mixed from the brand colors in [`src/styles/index.css`](../src/styles/index.css): `muted` (charcoal 4%), `muted-foreground` (charcoal 72%), `accent` (purple 8%, for hover backgrounds), `border` (charcoal 12%), `input` (charcoal 16%). `destructive` (red) is not a brand color but is kept for errors.
 
 **Rules**
 

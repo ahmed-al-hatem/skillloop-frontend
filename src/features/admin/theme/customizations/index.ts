@@ -1,4 +1,5 @@
 import type { Components, Theme } from '@mui/material/styles';
+import { dataDisplayCustomizations } from './dataDisplay';
 import { inputsCustomizations } from './inputs';
 import { navigationCustomizations } from './navigation';
 import { surfacesCustomizations } from './surfaces';
@@ -8,6 +9,7 @@ import { surfacesCustomizations } from './surfaces';
  * file and spread it here.
  */
 export const adminComponents: Components<Theme> = {
+  ...dataDisplayCustomizations,
   ...inputsCustomizations,
   ...navigationCustomizations,
   ...surfacesCustomizations,

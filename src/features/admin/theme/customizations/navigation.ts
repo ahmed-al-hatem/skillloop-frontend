@@ -1,6 +1,6 @@
-import { alpha, type Components, type Theme } from '@mui/material/styles';
+import type { Components, Theme } from '@mui/material/styles';
 
-/** Side menu items and drawers. */
+/** Side menu: dark drawer, pill items, the active one filled. */
 export const navigationCustomizations: Components<Theme> = {
   MuiDrawer: {
     styleOverrides: {
@@ -13,13 +13,17 @@ export const navigationCustomizations: Components<Theme> = {
   MuiListItemButton: {
     styleOverrides: {
       root: ({ theme }) => ({
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: 999,
+        minHeight: 44,
         marginBottom: theme.spacing(0.5),
+        color: theme.palette.text.secondary,
+        '& .MuiListItemIcon-root': { color: 'inherit' },
+        '&:hover': { color: theme.palette.text.primary },
         '&.Mui-selected': {
-          backgroundColor: alpha(theme.palette.primary.main, 0.1),
-          color: theme.palette.primary.main,
-          '& .MuiListItemIcon-root': { color: theme.palette.primary.main },
-          '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.14) },
+          backgroundColor: theme.palette.action.selected,
+          color: theme.palette.text.primary,
+          '& .MuiListItemIcon-root': { color: theme.palette.secondary.main },
+          '&:hover': { backgroundColor: theme.palette.action.selected },
         },
       }),
     },
@@ -31,7 +35,12 @@ export const navigationCustomizations: Components<Theme> = {
   },
   MuiListItemText: {
     styleOverrides: {
-      primary: { fontWeight: 500 },
+      primary: { fontWeight: 600 },
+    },
+  },
+  MuiBreadcrumbs: {
+    styleOverrides: {
+      separator: ({ theme }) => ({ color: theme.palette.text.disabled }),
     },
   },
 };

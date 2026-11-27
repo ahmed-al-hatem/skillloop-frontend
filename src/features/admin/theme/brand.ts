@@ -15,6 +15,7 @@ export function readBrand() {
     lime: readCssVar('--brand-lime'),
     charcoal: readCssVar('--brand-charcoal'),
     white: readCssVar('--brand-white'),
+    navy: readCssVar('--brand-navy'),
   };
 }
 

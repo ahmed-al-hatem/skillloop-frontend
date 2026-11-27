@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
-import logoUrl from '@/shared/assets/brand/logo-on-light.svg';
+import logoUrl from '@/shared/assets/brand/logo-on-dark.svg';
 import { ROUTES } from '@/shared/constants/routes';
 import { adminStrings } from '../strings';
 

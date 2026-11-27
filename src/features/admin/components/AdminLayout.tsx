@@ -19,11 +19,20 @@ export function AdminLayout() {
 
   return (
     <AdminThemeProvider>
-      <Box sx={{ display: 'flex', minHeight: '100dvh', bgcolor: 'background.default' }}>
+      {/* data-theme: dark tokens for the Tailwind components inside (ErrorState, EmptyState…). */}
+      <Box
+        data-theme="admin-dark"
+        sx={{
+          display: 'flex',
+          minHeight: '100dvh',
+          bgcolor: 'background.default',
+          color: 'text.primary',
+        }}
+      >
         <SideMenu />
         <AppNavbar />
         <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
-          <Stack spacing={2} sx={{ mx: { xs: 2, md: 3 }, pb: 5, mt: { xs: 9, md: 0 } }}>
+          <Stack spacing={3} sx={{ mx: { xs: 2, md: 4 }, pb: 5, mt: { xs: 9, md: 0 } }}>
             <Header />
             <ErrorBoundary>
               {outlet ?? (

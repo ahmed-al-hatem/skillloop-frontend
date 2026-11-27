@@ -1,16 +1,21 @@
 import type { Components, Theme } from '@mui/material/styles';
 
-/** Paper, cards and the app bar: flat with a thin border instead of shadows. */
+/** Cards and the app bar: large radius, a hairline border, no shadows (dark dashboard look). */
 export const surfacesCustomizations: Components<Theme> = {
   MuiPaper: {
     defaultProps: { elevation: 0 },
+    styleOverrides: {
+      root: { backgroundImage: 'none' },
+    },
   },
   MuiCard: {
     defaultProps: { variant: 'outlined' },
     styleOverrides: {
       root: ({ theme }) => ({
-        padding: theme.spacing(2),
+        padding: theme.spacing(2.5),
+        borderRadius: 20,
         borderColor: theme.palette.divider,
+        backgroundColor: theme.palette.background.paper,
       }),
     },
   },

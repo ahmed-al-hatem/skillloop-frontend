@@ -24,6 +24,7 @@
   --brand-lime: #b8ed50;
   --brand-charcoal: #2d2b35;
   --brand-white: #ffffff;
+  --brand-navy: #0b2349; /* dark surfaces: the admin panel background */
 
   --background: var(--brand-white);
   --foreground: var(--brand-charcoal);
@@ -43,6 +44,29 @@
   --border: color-mix(in oklab, var(--brand-charcoal) 12%, var(--brand-white));
   --input: color-mix(in oklab, var(--brand-charcoal) 16%, var(--brand-white));
   --ring: var(--brand-purple);
+}
+
+/*
+ * Dark scope used by the admin panel (src/features/admin). Set `data-theme="admin-dark"` on a
+ * wrapper and every token-based Tailwind component inside it (ErrorState, EmptyState…) turns dark.
+ * The MUI side builds the same colors in src/features/admin/theme/createAdminTheme.ts.
+ */
+[data-theme='admin-dark'] {
+  --background: var(--brand-navy);
+  --foreground: var(--brand-white);
+  --card: color-mix(in oklab, var(--brand-navy) 70%, black);
+  --card-foreground: var(--brand-white);
+  --popover: color-mix(in oklab, var(--brand-navy) 70%, black);
+  --popover-foreground: var(--brand-white);
+  --muted: color-mix(in oklab, var(--brand-white) 6%, var(--brand-navy));
+  --muted-foreground: color-mix(in oklab, var(--brand-white) 64%, var(--brand-navy));
+  --accent: color-mix(in oklab, var(--brand-purple) 24%, var(--brand-navy));
+  --accent-foreground: var(--brand-white);
+  --secondary-foreground: var(--brand-charcoal);
+  --destructive: oklch(0.72 0.17 25);
+  --border: color-mix(in oklab, var(--brand-white) 10%, var(--brand-navy));
+  --input: color-mix(in oklab, var(--brand-white) 16%, var(--brand-navy));
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -69,6 +93,7 @@
   --color-brand-purple: var(--brand-purple);
   --color-brand-lime: var(--brand-lime);
   --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-navy: var(--brand-navy);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
