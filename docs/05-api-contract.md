@@ -46,9 +46,9 @@ The agreement between frontend and backend is the backend team's **OpenAPI file*
 | Paginated list `{ data, meta }` | `GET /services`  | `paginatedSchema(ServiceSchema).parse(res.data)` |
 
 - `PageMeta` is `{ page, pageSize, total }`. Use `totalPages(meta)` for the page count.
-- Every failure becomes an `ApiRequestError` with `code`, `message`, `status` and `details`. For forms, `error.fieldErrors()` gives `{ field: message }`.
+- Every failure becomes an `ApiRequestError` with `code`, `message`, `status` and `details`. For forms, `error.fieldErrors` gives `{ field: message }`.
 - The client sends `Authorization` and `Accept-Language` (`ar` / `en`, from `<html lang>`) on every request.
-- Refresh-token rotation (`POST /auth/refresh`) is added with the auth feature. Until then a `401` clears the token.
+- `401` and `403 FORBIDDEN` go through hooks the auth feature registers: `setUnauthorizedHandler` (may refresh the token with `POST /auth/refresh` and retry; otherwise the token is cleared) and `setForbiddenHandler` (e.g. admin role revoked mid-session).
 
 ## Building an endpoint
 

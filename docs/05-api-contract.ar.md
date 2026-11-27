@@ -48,9 +48,9 @@
 | قائمة بصفحات `{ data, meta }` | `GET /services`  | `paginatedSchema(ServiceSchema).parse(res.data)` |
 
 - الـ `PageMeta` هو `{ page, pageSize, total }`. لعدد الصفحات استخدم `totalPages(meta)`.
-- كل فشل بيصير `ApiRequestError` فيه `code` و`message` و`status` و`details`. للفورمات، `error.fieldErrors()` بيعطيك `{ field: message }`.
+- كل فشل بيصير `ApiRequestError` فيه `code` و`message` و`status` و`details`. للفورمات، `error.fieldErrors` بيعطيك `{ field: message }`.
 - الـ client بيبعت `Authorization` و`Accept-Language` (`ar` أو `en`، من `<html lang>`) مع كل طلب.
-- تجديد التوكن (`POST /auth/refresh`) بينضاف مع ميزة الـ auth. لهداك الوقت، أي `401` بيمسح التوكن.
+- الـ `401` والـ `403 FORBIDDEN` بيمرّوا على hooks بتسجّلها ميزة الـ auth: `setUnauthorizedHandler` (ممكن يجدد التوكن بـ `POST /auth/refresh` ويعيد الطلب، وإلا بينمسح التوكن) و`setForbiddenHandler` (مثلاً لما تنسحب صلاحية الأدمن بنص الجلسة).
 
 ## بناء endpoint
 

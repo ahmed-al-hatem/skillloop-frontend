@@ -36,7 +36,7 @@ const form = useForm<LoginInput>({ resolver: zodResolver(LoginInputSchema) });
 <Input id="email" {...form.register('email')} error={form.formState.errors.email?.message} />;
 ```
 
-Show server validation errors (`VALIDATION_ERROR`, 400) from `ApiRequestError.fieldErrors()` with `form.setError(field, …)`.
+Show server validation errors (`VALIDATION_ERROR`, 400) from `ApiRequestError.fieldErrors` with `form.setError(field, …)`.
 
 ## Styling
 

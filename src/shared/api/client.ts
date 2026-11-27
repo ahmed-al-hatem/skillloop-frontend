@@ -1,16 +1,18 @@
-import axios, { isAxiosError } from 'axios';
+import axios, { isAxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import { env } from '@/config/env';
 import { tokenStorage } from '@/shared/lib/token-storage';
 import { ApiErrorBodySchema, type ApiError, type FieldError } from './types';
 
 /**
- * Thrown for every failed request. Read `code` (stable, from openapi.yaml), show `message`
- * (already translated by the backend), and map `details` to form fields with `fieldErrors()`.
+ * Thrown for every failed request. Branch on `code` (stable, from openapi.yaml), show `message`
+ * (already translated by the backend), and map `fieldErrors` to form fields.
  */
 export class ApiRequestError extends Error implements ApiError {
   code: string;
   status: number;
   details?: FieldError[];
+  /** `VALIDATION_ERROR` details as `{ field: message }`, ready for react-hook-form `setError`. */
+  fieldErrors: Record<string, string>;
 
   constructor({ message, code, status, details }: ApiError) {
     super(message);
@@ -18,11 +20,9 @@ export class ApiRequestError extends Error implements ApiError {
     this.code = code;
     this.status = status;
     this.details = details;
-  }
-
-  /** `VALIDATION_ERROR` details as `{ field: message }`, ready for react-hook-form `setError`. */
-  fieldErrors(): Record<string, string> {
-    return Object.fromEntries((this.details ?? []).map(({ field, message }) => [field, message]));
+    this.fieldErrors = Object.fromEntries(
+      (details ?? []).map(({ field, message: fieldMessage }) => [field, fieldMessage]),
+    );
   }
 }
 
@@ -56,13 +56,28 @@ export function toApiError(error: unknown): ApiRequestError {
 }
 
 /**
- * Called when the API answers 401. The auth feature registers what should happen
- * (clear its state, go to /login). shared/ can't import features, so it is injected.
- * Refresh-token rotation (`POST /auth/refresh`) is added with the auth feature.
+ * Called when the API answers 401. The auth feature registers it (shared/ can't import features):
+ * it may return a promise that refreshes the token and retries `request` — that result is used
+ * instead of the error. If it returns nothing (or no handler is set), the token is cleared and
+ * the 401 is rejected.
  */
-let onUnauthorized: (() => void) | undefined;
-export function setUnauthorizedHandler(handler: (() => void) | undefined) {
+export type UnauthorizedHandler = (
+  error: ApiRequestError,
+  request: InternalAxiosRequestConfig,
+) => Promise<AxiosResponse> | void;
+let onUnauthorized: UnauthorizedHandler | undefined;
+export function setUnauthorizedHandler(handler: UnauthorizedHandler | undefined) {
   onUnauthorized = handler;
+}
+
+/**
+ * Called when the API answers 403 `FORBIDDEN` (e.g. admin role revoked mid-session).
+ * Other 403 codes (`EMAIL_NOT_VERIFIED`, `PHONE_REQUIRED`, `ACCOUNT_SUSPENDED`) are left to the caller.
+ */
+export type ForbiddenHandler = (error: ApiRequestError) => void;
+let onForbidden: ForbiddenHandler | undefined;
+export function setForbiddenHandler(handler: ForbiddenHandler | undefined) {
+  onForbidden = handler;
 }
 
 export const api = axios.create({
@@ -78,15 +93,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Turn every failure into an ApiRequestError and handle expired sessions in one place.
+// Turn every failure into an ApiRequestError and handle 401/403 in one place.
 api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     const apiError = toApiError(error);
+    const request = isAxiosError(error) ? error.config : undefined;
+
     if (apiError.status === 401) {
+      const retry = request ? onUnauthorized?.(apiError, request) : undefined;
+      if (retry) return retry;
       tokenStorage.clear();
-      onUnauthorized?.();
     }
+    if (apiError.status === 403 && apiError.code === 'FORBIDDEN') onForbidden?.(apiError);
+
     return Promise.reject(apiError);
   },
 );
