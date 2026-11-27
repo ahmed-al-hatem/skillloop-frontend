@@ -1,16 +1,7 @@
-import { Link, NavLink, Outlet } from 'react-router';
+import { Link, Outlet } from 'react-router';
 import logoUrl from '@/shared/assets/brand/logo-on-light.svg';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { ROUTES } from '@/shared/constants/routes';
-import { cn } from '@/shared/lib/cn';
-
-const NAV_ITEMS = [
-  { to: ROUTES.matching, label: 'الشركاء المقترحون' },
-  { to: ROUTES.exchanges, label: 'التبادلات' },
-  { to: ROUTES.timeBank, label: 'بنك الساعات' },
-  { to: ROUTES.reviews, label: 'التقييمات' },
-  { to: ROUTES.profile, label: 'ملفي' },
-];
 
 export function MainLayout() {
   return (
@@ -20,25 +11,6 @@ export function MainLayout() {
           <Link to={ROUTES.home} className="shrink-0">
             <img src={logoUrl} alt="SkillLoop" className="h-8 w-auto" />
           </Link>
-          <nav className="flex flex-wrap gap-1">
-            {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  cn(
-                    'rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-accent',
-                    isActive && 'bg-accent font-medium text-accent-foreground',
-                  )
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-          <NavLink to={ROUTES.login} className="ms-auto text-sm text-muted-foreground">
-            تسجيل الدخول
-          </NavLink>
         </div>
       </header>
 

@@ -10,7 +10,7 @@
 
 ```
 main.tsx ──(VITE_USE_MOCKS=true)──► mocks/browser.ts ──► mocks/handlers.ts
-                                                         ├─ ...matchingHandlers
+                                                         ├─ ...authHandlers
                                                          └─ ...<feature>Handlers
 ```
 
@@ -22,25 +22,28 @@ main.tsx ──(VITE_USE_MOCKS=true)──► mocks/browser.ts ──► mocks/h
 
 الأسهل: `/add-endpoint` بـ Claude Code أو Codex. أو يدوياً:
 
-**1. البيانات**: `features/exchanges/mocks/exchanges.data.ts`
+**1. البيانات**: `features/services/mocks/services.data.ts`
 
 ```ts
-import type { Exchange } from '../schemas/exchange.schema';
+import type { Service } from '../schemas/service.schema';
 
-export const exchanges: Exchange[] = [/* بيانات واقعية، أسماء عربي وإنجليزي */];
+export const services: Service[] = [/* بيانات واقعية، أسماء عربي وإنجليزي */];
 ```
 
-**2. الـ Handler**: `features/exchanges/mocks/exchanges.handlers.ts`
+**2. الـ Handler**: `features/services/mocks/services.handlers.ts`
 
 ```ts
 import { delay, http, HttpResponse } from 'msw';
 import { env } from '@/config/env';
-import { exchanges } from './exchanges.data';
+import { services } from './services.data';
 
-export const exchangesHandlers = [
-  http.get(`${env.API_URL}/exchanges`, async () => {
+export const servicesHandlers = [
+  http.get(`${env.API_URL}/services`, async () => {
     await delay(400);
-    return HttpResponse.json({ data: exchanges });
+    return HttpResponse.json({
+      data: services,
+      meta: { page: 1, pageSize: 20, total: services.length },
+    });
   }),
 ];
 ```
@@ -48,9 +51,9 @@ export const exchangesHandlers = [
 **3. التسجيل**: سطر واحد بـ `src/mocks/handlers.ts`:
 
 ```ts
-import { exchangesHandlers } from '@/features/exchanges/mocks/exchanges.handlers';
+import { servicesHandlers } from '@/features/services/mocks/services.handlers';
 
-export const handlers: RequestHandler[] = [...exchangesHandlers, ...matchingHandlers];
+export const handlers: RequestHandler[] = [...authHandlers, ...servicesHandlers];
 ```
 
 ## تجريب حالات الخطأ والقائمة الفاضية
@@ -59,14 +62,23 @@ export const handlers: RequestHandler[] = [...exchangesHandlers, ...matchingHand
 
 ```ts
 // خطأ
-return HttpResponse.json({ message: 'Server error', code: 'SERVER_ERROR' }, { status: 500 });
+return HttpResponse.json(
+  { error: { code: 'INTERNAL_ERROR', message: 'Server error' } },
+  { status: 500 },
+);
 // خطأ بالبيانات
 return HttpResponse.json(
-  { message: 'Invalid', code: 'VALIDATION_ERROR', errors: { email: ['Already taken'] } },
-  { status: 422 },
+  {
+    error: {
+      code: 'VALIDATION_ERROR',
+      message: 'Some fields are invalid',
+      details: [{ field: 'email', message: 'Already taken' }],
+    },
+  },
+  { status: 400 },
 );
 // قائمة فاضية
-return HttpResponse.json({ data: [] });
+return HttpResponse.json({ data: [], meta: { page: 1, pageSize: 20, total: 0 } });
 ```
 
 ## القواعد

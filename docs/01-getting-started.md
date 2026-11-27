@@ -19,7 +19,7 @@ cp .env.example .env        # PowerShell: Copy-Item .env.example .env
 npm run dev
 ```
 
-Open http://localhost:5173 → you land on **/matching** with 3 fake partner cards. That means React, the router, TanStack Query, axios and MSW all work.
+Open http://localhost:5173 → you see the app header and a "قريباً" (coming soon) placeholder. The screens are built from the Figma designs, feature by feature.
 
 ## Environment variables
 

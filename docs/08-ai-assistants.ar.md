@@ -35,7 +35,7 @@
 ```
 /start-task 12                   → صرت على فرع feat/12-matching-list
 "ابني كرت الشريك حسب الـ issue"
-/add-endpoint GET /matches/suggestions
+/add-endpoint GET /categories
 npm run dev → شوف النتيجة بالمتصفح
 /finish-task                     → انفتح PR وانطلبت مراجعة من زميلك
 ```

@@ -2,94 +2,45 @@
 
 **English** · [العربية](05-api-contract.ar.md)
 
-The agreement between frontend and backend. **We only call endpoints listed here.** A new endpoint is agreed with the backend first, then added here (both languages), then built.
+The agreement between frontend and backend is the backend team's **OpenAPI file** (`openapi.yaml`, API v1). It lists every endpoint, its request, its response and its errors. **We only call endpoints that are in that file.** If a screen needs something that isn't there, ask the backend team to add it to `openapi.yaml` first, then build it.
 
-## Conventions
+## Where to find it
 
-- **Base URL:** `VITE_API_URL` (e.g. `http://localhost:8000/api/v1`)
-- **Auth:** `Authorization: Bearer <token>` — added automatically by `shared/api/client.ts`
-- **JSON** in and out, field names in `camelCase`, dates in ISO 8601 UTC (`2026-11-25T10:00:00Z`), IDs as strings.
+- Ask the backend team for the latest `openapi.yaml`. Keep a local copy at `local-docs/api/openapi.yaml`. The `local-docs/` folder is in `.gitignore`, so it is **not** committed to this repo.
+- To read it comfortably, open it in VS Code with an OpenAPI preview extension, or paste it into https://editor.swagger.io.
+- Each endpoint lists who can call it (anyone / member / verified member / admin) and the SRS requirement it implements.
 
-### Success
+## Basics (from `openapi.yaml`)
 
-```json
-{ "data": { ... }, "meta": { ... } }
-```
-
-### Paginated list
-
-```json
-{
-  "data": [ ... ],
-  "meta": { "page": 1, "perPage": 20, "total": 57, "totalPages": 3 }
-}
-```
-
-Query: `?page=1&perPage=20`. Frontend type: `Paginated<T>` / `paginatedSchema(item)`.
+| Topic    | Rule                                                                                           |
+| -------- | ---------------------------------------------------------------------------------------------- |
+| Base URL | `VITE_API_URL`, ending in `/api/v1` (e.g. `http://localhost:3000/api/v1`)                      |
+| Format   | JSON. `multipart/form-data` only for image uploads                                             |
+| Auth     | `Authorization: Bearer <accessToken>` (15 min), renewed with `POST /auth/refresh`              |
+| IDs      | UUID strings                                                                                   |
+| Dates    | ISO 8601 UTC, e.g. `2026-11-27T18:30:00Z`                                                      |
+| Language | `Accept-Language: ar` or `en` (error messages are translated)                                  |
+| Lists    | `?page=1&pageSize=20` (max 50) → `{ "data": [...], "meta": { "page", "pageSize", "total" } }`  |
+| Points   | Always integers. Balances and prices are computed by the backend; the frontend only shows them |
 
 ### Error (every 4xx / 5xx)
 
 ```json
 {
-  "message": "The given data was invalid.",
-  "code": "VALIDATION_ERROR",
-  "errors": { "email": ["The email has already been taken."] }
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Some fields are invalid",
+    "details": [{ "field": "phone", "message": "Phone number is already used" }]
+  }
 }
 ```
 
-`errors` only on 422. In the frontend every failure becomes an `ApiRequestError` (`message`, `code`, `status`, `errors`).
+`code` is stable, so use it in code. `message` is already translated, so show it to the user. `details` appears only for `VALIDATION_ERROR`, with one item per field. The full list of codes is at the top of `openapi.yaml`.
 
-| Status | Meaning                 | Frontend does                       |
-| ------ | ----------------------- | ----------------------------------- |
-| 401    | Not logged in / expired | Clears the token, auth handler runs |
-| 403    | Not allowed             | Show message                        |
-| 404    | Not found               | Show `EmptyState` / not-found       |
-| 422    | Validation              | Show `errors` under the form fields |
-| 5xx    | Server error            | `ErrorState` with retry             |
+> ⚠️ `src/shared/api/client.ts` and `src/shared/api/types.ts` still follow the first draft (a flat error with `errors`, plus `perPage`). Align them with this format when the first real endpoint (auth) is built.
 
-## Endpoints
+## Building an endpoint
 
-Status (Frontend column): `—` not started · `mocked` MSW handler exists · `live` tested against the real backend.
-
-| Method | Path                   | Feature  | Response `data` | Status (BE) | Frontend |
-| ------ | ---------------------- | -------- | --------------- | ----------- | -------- |
-| GET    | `/matches/suggestions` | matching | `Match[]`       | draft       | mocked   |
-
-> `GET /matches/suggestions` is a **draft example** to show the format — confirm it with the backend team.
-> Add the rest (auth, profile, exchanges, time-bank, reviews) as they are agreed.
-
-## Endpoint details
-
-### GET `/matches/suggestions`
-
-Suggested partners for the current user.
-
-```json
-{
-  "data": [
-    {
-      "id": "m1",
-      "partner": { "id": "u1", "name": "Sara", "avatarUrl": null, "rating": 4.8 },
-      "theyOffer": [{ "id": "s1", "name": "Photoshop", "category": "design" }],
-      "theyWant": [{ "id": "s2", "name": "React", "category": "programming" }],
-      "score": 92
-    }
-  ]
-}
-```
-
-Schema: `features/matching/schemas/match.schema.ts`.
-
-## Adding an endpoint (template)
-
-```md
-### METHOD `/path`
-
-What it does, who can call it.
-
-Request body / query: …
-Response `data`: … (JSON example)
-Errors: 404 …, 422 …
-```
-
-Then: add the row to the table → `/add-endpoint` (or follow [06 · Mocking](06-mocking.md)) → set Frontend to `mocked`.
+1. Find it in `openapi.yaml`.
+2. Run `/add-endpoint` in Claude Code / Codex, or follow [06 · Mocking](06-mocking.md). This writes the Zod schema (matching the OpenAPI schema), the api function, the query hook and the MSW mock.
+3. When the real backend is up, test with `VITE_USE_MOCKS=false`.

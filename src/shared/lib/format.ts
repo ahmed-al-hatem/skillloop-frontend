@@ -11,12 +11,3 @@ export function formatDateTime(value: string | Date, locale = DEFAULT_LOCALE) {
     new Date(value),
   );
 }
-
-/** Time-bank hours: 1.5 → "1.5 ساعة". The balance itself always comes from the backend. */
-export function formatHours(hours: number, locale = DEFAULT_LOCALE) {
-  return new Intl.NumberFormat(locale, {
-    style: 'unit',
-    unit: 'hour',
-    unitDisplay: 'long',
-  }).format(hours);
-}

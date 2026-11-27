@@ -30,7 +30,7 @@
 feat(matching): add partner card
 fix(auth): show server error on login
 chore: add msw handlers for exchanges
-docs: describe time-bank endpoints
+docs: describe wallet endpoints
 ```
 
 الشكل: `type(scope): شو عملت، بصيغة الأمر، أحرف صغيرة، بالإنجليزي`. الـ scope هو اسم مجلد الـ feature.

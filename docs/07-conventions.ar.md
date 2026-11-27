@@ -8,15 +8,15 @@
 
 ## التسمية
 
-| الشي              | الأسلوب                  | مثال                                 |
-| ----------------- | ------------------------ | ------------------------------------ |
-| ملف المكوّن واسمه  | PascalCase               | `PartnerCard.tsx` → `PartnerCard`    |
-| نوع الـ Props     | `<Component>Props`       | `PartnerCardProps`                   |
-| Hook              | `useX` بـ camelCase      | `useSuggestions`                     |
-| باقي الملفات      | kebab-case + لاحقة الدور | `match.schema.ts`، `matching.api.ts` |
-| مجلد الـ feature  | kebab-case               | `time-bank/`                         |
-| Zod schema ونوعها | `XSchema` و`X`           | `MatchSchema` و`Match`               |
-| الثوابت           | UPPER_SNAKE_CASE         | `ROUTES`، `QUERY_STALE_TIME`         |
+| الشي              | الأسلوب                  | مثال                                   |
+| ----------------- | ------------------------ | -------------------------------------- |
+| ملف المكوّن واسمه  | PascalCase               | `ServiceCard.tsx` → `ServiceCard`      |
+| نوع الـ Props     | `<Component>Props`       | `ServiceCardProps`                     |
+| Hook              | `useX` بـ camelCase      | `useServices`                          |
+| باقي الملفات      | kebab-case + لاحقة الدور | `service.schema.ts`، `services.api.ts` |
+| مجلد الـ feature  | kebab-case               | `admin-members/`                       |
+| Zod schema ونوعها | `XSchema` و`X`           | `MatchSchema` و`Match`                 |
+| الثوابت           | UPPER_SNAKE_CASE         | `ROUTES`، `QUERY_STALE_TIME`           |
 
 - **Named exports بس** (`export function X`)، بدون `export default`.
 - مكوّن واحد بكل ملف (دوال مساعدة صغيرة خاصة بنفس الملف ما في مشكلة).
@@ -26,7 +26,7 @@
 - الأنواع بتطلع من Zod: `export type Match = z.infer<typeof MatchSchema>`. لا تكتب نفس النوع يدوياً.
 - ممنوع `any`. إذا فعلاً ما بتعرف النوع استخدم `unknown` وتحقق منه.
 - بيانات السيرفر مكانها TanStack Query، لا تنسخها لـ `useState`.
-- مفاتيح الـ query: object واحد لكل feature (`matchingKeys`)، شوف `features/matching/api/matching.queries.ts`.
+- مفاتيح الـ query: object واحد لكل feature (`servicesKeys`) بـ `features/<f>/api/<f>.queries.ts`.
 
 ## الفورمز
 
@@ -62,7 +62,7 @@ const form = useForm<LoginInput>({ resolver: zodResolver(LoginInputSchema) });
 
 ## حالات الواجهة
 
-كل شاشة بتجيب بيانات لازم تعالج: **التحميل** (`Spinner`)، **الخطأ** (`ErrorState` مع إعادة المحاولة)، **الفاضي** (`EmptyState`). شوف `features/matching/components/SuggestionsList.tsx`.
+كل شاشة بتجيب بيانات لازم تعالج: **التحميل** (`Spinner`)، **الخطأ** (`ErrorState` مع إعادة المحاولة)، **الفاضي** (`EmptyState`).
 
 ## shadcn/ui (اختياري)
 

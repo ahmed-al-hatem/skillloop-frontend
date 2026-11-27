@@ -1,12 +1,6 @@
-import { createBrowserRouter, Navigate } from 'react-router';
+import { createBrowserRouter } from 'react-router';
 import { authRoutes } from '@/features/auth';
-import { exchangesRoutes } from '@/features/exchanges';
-import { matchingRoutes } from '@/features/matching';
-import { profileRoutes } from '@/features/profile';
-import { reviewsRoutes } from '@/features/reviews';
-import { timeBankRoutes } from '@/features/time-bank';
 import { EmptyState } from '@/shared/components/EmptyState';
-import { ROUTES } from '@/shared/constants/routes';
 import { AuthLayout } from './layouts/AuthLayout';
 import { MainLayout } from './layouts/MainLayout';
 
@@ -22,12 +16,8 @@ export const router = createBrowserRouter([
   {
     element: <MainLayout />,
     children: [
-      { index: true, element: <Navigate to={ROUTES.matching} replace /> },
-      ...exchangesRoutes,
-      ...matchingRoutes,
-      ...profileRoutes,
-      ...reviewsRoutes,
-      ...timeBankRoutes,
+      // Placeholder until the home screen is built from the Figma designs.
+      { index: true, element: <EmptyState title="SkillLoop" description="قريباً" /> },
       { path: '*', element: <EmptyState title="الصفحة غير موجودة" description="404" /> },
     ],
   },
