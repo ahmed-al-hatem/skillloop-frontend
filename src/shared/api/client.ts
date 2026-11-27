@@ -1,20 +1,28 @@
 import axios, { isAxiosError } from 'axios';
 import { env } from '@/config/env';
 import { tokenStorage } from '@/shared/lib/token-storage';
-import { ApiErrorSchema, type ApiError } from './types';
+import { ApiErrorBodySchema, type ApiError, type FieldError } from './types';
 
-/** Thrown for every failed request. Read `code`, `status` and field `errors` in the UI. */
+/**
+ * Thrown for every failed request. Read `code` (stable, from openapi.yaml), show `message`
+ * (already translated by the backend), and map `details` to form fields with `fieldErrors()`.
+ */
 export class ApiRequestError extends Error implements ApiError {
   code: string;
   status: number;
-  errors?: Record<string, string[]>;
+  details?: FieldError[];
 
-  constructor({ message, code, status, errors }: ApiError) {
+  constructor({ message, code, status, details }: ApiError) {
     super(message);
     this.name = 'ApiRequestError';
     this.code = code;
     this.status = status;
-    this.errors = errors;
+    this.details = details;
+  }
+
+  /** `VALIDATION_ERROR` details as `{ field: message }`, ready for react-hook-form `setError`. */
+  fieldErrors(): Record<string, string> {
+    return Object.fromEntries((this.details ?? []).map(({ field, message }) => [field, message]));
   }
 }
 
@@ -30,8 +38,9 @@ export function toApiError(error: unknown): ApiRequestError {
         status: 0,
       });
     }
-    const body = ApiErrorSchema.safeParse(error.response.data);
-    if (body.success) return new ApiRequestError({ ...body.data, status: error.response.status });
+    const body = ApiErrorBodySchema.safeParse(error.response.data);
+    if (body.success)
+      return new ApiRequestError({ ...body.data.error, status: error.response.status });
     return new ApiRequestError({
       message: error.message,
       code: 'UNKNOWN_ERROR',
@@ -49,6 +58,7 @@ export function toApiError(error: unknown): ApiRequestError {
 /**
  * Called when the API answers 401. The auth feature registers what should happen
  * (clear its state, go to /login). shared/ can't import features, so it is injected.
+ * Refresh-token rotation (`POST /auth/refresh`) is added with the auth feature.
  */
 let onUnauthorized: (() => void) | undefined;
 export function setUnauthorizedHandler(handler: (() => void) | undefined) {
@@ -60,10 +70,11 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 });
 
-// Attach the access token to every request.
+// Attach the access token and the UI language (the backend translates error messages).
 api.interceptors.request.use((config) => {
   const token = tokenStorage.get();
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  config.headers['Accept-Language'] = document.documentElement.lang === 'en' ? 'en' : 'ar';
   return config;
 });
 

@@ -45,7 +45,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 - Never import mock data into components. Fake data goes through MSW handlers in `features/<f>/mocks/`.
 - The API contract is the backend's `openapi.yaml` (local copy in `local-docs/api/openapi.yaml`, gitignored; rules in `docs/05-api-contract.md`). **Never invent an endpoint.** If one is missing, stop and tell the user the backend team must add it to `openapi.yaml` first.
 - Point balances, prices and match scores are computed by the backend. The frontend only displays them.
-- Forms: react-hook-form + `zodResolver(schema)`. Show server field errors from `ApiRequestError` (the API sends them in `error.details`; `shared/api/client.ts` still follows the old draft shape and must be aligned when the first real endpoint is built).
+- Forms: react-hook-form + `zodResolver(schema)`. Show server field errors with `ApiRequestError.fieldErrors()` (from the API's `error.details`).
 
 ## UI rules
 

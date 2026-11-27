@@ -37,7 +37,18 @@ The agreement between frontend and backend is the backend team's **OpenAPI file*
 
 `code` is stable, so use it in code. `message` is already translated, so show it to the user. `details` appears only for `VALIDATION_ERROR`, with one item per field. The full list of codes is at the top of `openapi.yaml`.
 
-> ⚠️ `src/shared/api/client.ts` and `src/shared/api/types.ts` still follow the first draft (a flat error with `errors`, plus `perPage`). Align them with this format when the first real endpoint (auth) is built.
+## In the frontend (`src/shared/api/`)
+
+| Response in `openapi.yaml`      | Example          | Validate with                                    |
+| ------------------------------- | ---------------- | ------------------------------------------------ |
+| Single object (no envelope)     | `GET /me`        | `MeSchema.parse(res.data)`                       |
+| List `{ data }`                 | `GET /me/skills` | `listSchema(SkillSchema).parse(res.data).data`   |
+| Paginated list `{ data, meta }` | `GET /services`  | `paginatedSchema(ServiceSchema).parse(res.data)` |
+
+- `PageMeta` is `{ page, pageSize, total }`. Use `totalPages(meta)` for the page count.
+- Every failure becomes an `ApiRequestError` with `code`, `message`, `status` and `details`. For forms, `error.fieldErrors()` gives `{ field: message }`.
+- The client sends `Authorization` and `Accept-Language` (`ar` / `en`, from `<html lang>`) on every request.
+- Refresh-token rotation (`POST /auth/refresh`) is added with the auth feature. Until then a `401` clears the token.
 
 ## Building an endpoint
 
