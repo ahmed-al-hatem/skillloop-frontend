@@ -66,9 +66,12 @@ features/admin/                  # the shell, shared by every admin section
 │   └── flipInRtl.ts             # mirrors arrow icons in RTL
 ├── components/                  # AdminLayout, SideMenu, SideMenuMobile, AppNavbar, Header, breadcrumbs…
 ├── config/navigation.ts         # ADMIN_NAV — one item per admin section
+├── index.ts                     # exports adminRoute only — no MUI here (the router loads it eagerly)
 ├── strings.ts                   # shell texts (ready for i18n)
-├── routes.tsx                   # adminRoute: the lazy /admin layout route
-└── index.ts
+└── routes.tsx                   # adminRoute: the lazy /admin layout route
+
+features/admin-ui/               # MUI building blocks shared by the sections: StatCard, ChartCard…
+                                 # (imported only by lazy admin pages — never by src/app)
 
 features/admin-<section>/        # one feature per section: admin-dashboard, admin-categories…
 └── (api/, components/, pages/, schemas/, mocks/, routes.tsx, index.ts — like any feature)

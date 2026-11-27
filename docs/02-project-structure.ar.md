@@ -68,9 +68,12 @@ features/admin/                  # الهيكل المشترك لكل أقسام
 │   └── flipInRtl.ts             # بيقلب أيقونات الأسهم بالـ RTL
 ├── components/                  # AdminLayout، SideMenu، SideMenuMobile، AppNavbar، Header، المسار…
 ├── config/navigation.ts         # ADMIN_NAV — عنصر لكل قسم
+├── index.ts                     # بيصدّر adminRoute بس — بدون MUI (الـ router بيحمّله فوراً)
 ├── strings.ts                   # نصوص الهيكل (جاهزة للترجمة)
-├── routes.tsx                   # adminRoute: الـ route تبع /admin (lazy)
-└── index.ts
+└── routes.tsx                   # adminRoute: الـ route تبع /admin (lazy)
+
+features/admin-ui/               # مكونات MUI مشتركة بين الأقسام: StatCard، ChartCard…
+                                 # (بتستوردها صفحات الإدارة الـ lazy بس — أبداً من src/app)
 
 features/admin-<section>/        # feature لكل قسم: admin-dashboard، admin-categories…
 └── (api/، components/، pages/، schemas/، mocks/، routes.tsx، index.ts — متل أي feature)

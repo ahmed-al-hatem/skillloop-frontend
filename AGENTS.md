@@ -36,7 +36,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 5. `src/app/` only assembles the app (providers, router, layouts).
 6. Use the `@/` alias for imports from `src/`.
 7. Before creating a UI primitive, check `src/shared/components/ui/`. A new shared component goes in its own small PR.
-8. **Admin area:** `src/features/admin/` is the shell (MUI theme, layout, side menu in `config/navigation.ts`). Each admin section is its own feature named `admin-<section>` (e.g. `admin-dashboard`), nested under `...adminRoute` in `src/app/router.tsx` with one spread line, plus one item in `ADMIN_NAV`. MUI imports are allowed only in `src/features/admin*` (ESLint enforces it).
+8. **Admin area:** `src/features/admin/` is the shell (MUI theme, layout, side menu in `config/navigation.ts`). Each admin section is its own feature named `admin-<section>` (e.g. `admin-dashboard`), nested under `...adminRoute` in `src/app/router.tsx` with one spread line, plus one item in `ADMIN_NAV`. Shared MUI building blocks (`StatCard`, `ChartCard`…) live in `src/features/admin-ui/` — never export MUI from `features/admin/index.ts`, because the router imports it eagerly and it would land in the member bundle. MUI imports are allowed only in `src/features/admin*` (ESLint enforces it).
 
 ## Data rules
 
