@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router';
+import { adminRoute } from '@/features/admin';
 import { authRoutes } from '@/features/auth';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { AuthLayout } from './layouts/AuthLayout';
@@ -9,6 +10,11 @@ import { MainLayout } from './layouts/MainLayout';
  * Order inside `children` doesn't matter; keep it alphabetical to avoid merge conflicts.
  */
 export const router = createBrowserRouter([
+  {
+    // Admin panel (MUI, lazy). Each admin-* feature adds ONE spread line inside `children`.
+    ...adminRoute,
+    children: [],
+  },
   {
     element: <AuthLayout />,
     children: [...authRoutes],

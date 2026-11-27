@@ -1,3 +1,9 @@
+/*
+ * Cascade layer order. `mui` sits between Tailwind's base (preflight) and its utilities,
+ * so MUI styles (admin area only) win over the reset, and Tailwind utilities still win over MUI.
+ * See src/features/admin/theme/createAdminCache.ts.
+ */
+@layer theme, base, mui, components, utilities;
 @import 'tailwindcss';
 /* Brand fonts, self-hosted (variable weight 100–900). See design/README.md. */
 @import '@fontsource-variable/noto-sans-arabic';

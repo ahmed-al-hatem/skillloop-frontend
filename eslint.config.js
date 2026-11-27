@@ -17,6 +17,12 @@ const noDeepFeatureImportsExceptMocks = {
   regex: '^@/features/[^/]+/(?!mocks/).+',
   message: 'src/mocks may only import from @/features/<feature>/mocks/*.',
 };
+// MUI (and its Emotion/stylis stack) is allowed only in the admin area: src/features/admin*.
+// The member UI is Tailwind only (see AGENTS.md → UI rules).
+const noMuiOutsideAdmin = {
+  regex: '^(@mui|@emotion)/|^stylis',
+  message: 'MUI is only allowed in src/features/admin* — use Tailwind + shared/components/ui.',
+};
 const noFeaturesInShared = {
   regex: '(^@/|/)features(/|$)',
   message: 'src/shared must never import from src/features.',
@@ -37,19 +43,31 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      'no-restricted-imports': ['error', { patterns: [noDeepFeatureImports, noMuiOutsideAdmin] }],
+    },
+  },
+  {
+    files: ['src/features/admin*/**/*.{ts,tsx}'],
+    rules: {
       'no-restricted-imports': ['error', { patterns: [noDeepFeatureImports] }],
     },
   },
   {
     files: ['src/shared/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [noDeepFeatureImports, noFeaturesInShared] }],
+      'no-restricted-imports': [
+        'error',
+        { patterns: [noDeepFeatureImports, noFeaturesInShared, noMuiOutsideAdmin] },
+      ],
     },
   },
   {
     files: ['src/mocks/**/*.ts'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [noDeepFeatureImportsExceptMocks] }],
+      'no-restricted-imports': [
+        'error',
+        { patterns: [noDeepFeatureImportsExceptMocks, noMuiOutsideAdmin] },
+      ],
     },
   },
   {
