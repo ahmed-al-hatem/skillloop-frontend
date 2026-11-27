@@ -5,7 +5,7 @@ const variants = {
   default: 'bg-primary/10 text-primary',
   secondary: 'bg-secondary text-secondary-foreground',
   outline: 'border text-foreground',
-  destructive: 'bg-destructive/10 text-destructive',
+  destructive: 'bg-danger-muted text-danger',
 } as const;
 
 export type BadgeProps = ComponentProps<'span'> & { variant?: keyof typeof variants };

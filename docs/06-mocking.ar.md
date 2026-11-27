@@ -56,9 +56,27 @@ import { servicesHandlers } from '@/features/services/mocks/services.handlers';
 export const handlers: RequestHandler[] = [...authHandlers, ...servicesHandlers];
 ```
 
-## تجريب حالات الخطأ والقائمة الفاضية
+## أدوات مشتركة (`src/mocks/utils.ts`)
 
-غيّر الـ handler مؤقتاً (ولا ترفع التغيير):
+| الأداة                             | شو بتعمل                                                                                          |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `paginate(items, url)`             | بترجع `{ data, meta: { page, pageSize, total } }` حسب `?page` و `?pageSize` (افتراضي 20، أقصى 50) |
+| `apiError(code, status, details?)` | رد خطأ بشكل `{ error: { code, message, details } }` بكود من عقد الـ API                           |
+| `withScenario(request)`            | تأخير واقعي + الحالة التجريبية المختارة بـ `?__mock=…`                                            |
+
+```ts
+http.get(`${env.API_URL}/services`, async ({ request }) => {
+  const { response, empty } = await withScenario(request);
+  if (response) return response;
+  return HttpResponse.json(paginate(empty ? [] : services, request.url));
+}),
+```
+
+زيد `?__mock=empty|error|slow|forbidden` على رابط **الصفحة** (مثلاً `/admin/members?__mock=empty`)، أو اكتب بالـ console `localStorage.__mock = 'slow'` (و `delete localStorage.__mock` لترجع طبيعي). `error` ← 500 `INTERNAL_ERROR`، `forbidden` ← 403 `FORBIDDEN`، `slow` ← تأخير 3 ثواني، `empty` ← الـ handler بيرجع بلا بيانات.
+
+## تجريب حالات الخطأ والقائمة الفاضية يدوياً
+
+لباقي الحالات، غيّر الـ handler مؤقتاً (ولا ترفع التغيير):
 
 ```ts
 // خطأ

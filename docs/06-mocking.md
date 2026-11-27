@@ -54,9 +54,27 @@ import { servicesHandlers } from '@/features/services/mocks/services.handlers';
 export const handlers: RequestHandler[] = [...authHandlers, ...servicesHandlers];
 ```
 
-## Testing error and empty states
+## Shared helpers (`src/mocks/utils.ts`)
 
-Temporarily change a handler (don't commit it):
+| Helper                             | Does                                                                                        |
+| ---------------------------------- | ------------------------------------------------------------------------------------------- |
+| `paginate(items, url)`             | `{ data, meta: { page, pageSize, total } }` from `?page` / `?pageSize` (default 20, max 50) |
+| `apiError(code, status, details?)` | `{ error: { code, message, details } }` response with a contract error code                 |
+| `withScenario(request)`            | realistic delay + the demo scenario picked with `?__mock=…`                                 |
+
+```ts
+http.get(`${env.API_URL}/services`, async ({ request }) => {
+  const { response, empty } = await withScenario(request);
+  if (response) return response;
+  return HttpResponse.json(paginate(empty ? [] : services, request.url));
+}),
+```
+
+Add `?__mock=empty|error|slow|forbidden` to the **page** URL (e.g. `/admin/members?__mock=empty`), or run `localStorage.__mock = 'slow'` in the console (`delete localStorage.__mock` to stop). `error` → 500 `INTERNAL_ERROR`, `forbidden` → 403 `FORBIDDEN`, `slow` → 3 s delay, `empty` → the handler returns no data.
+
+## Testing error and empty states by hand
+
+For other cases, temporarily change a handler (don't commit it):
 
 ```ts
 // Error

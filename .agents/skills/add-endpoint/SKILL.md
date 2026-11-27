@@ -28,14 +28,19 @@ export type Category = z.infer<typeof CategorySchema>;
 
 ## 3. API function — `features/<f>/api/<f>.api.ts`
 
-Use the shared client and validate the response:
+Use the shared client and validate the response. Match the response shape in `openapi.yaml`:
+
+- single object (no envelope) → `XSchema.parse(res.data)`
+- list `{ data }` → `listSchema(XSchema).parse(res.data).data` (from `@/shared/api/types`)
+- paginated `{ data, meta }` → `paginatedSchema(XSchema).parse(res.data)`, params typed with `PageParams`
 
 ```ts
 import { api } from '@/shared/api/client';
+import { listSchema } from '@/shared/api/types';
 
 export async function getCategories(): Promise<Category[]> {
   const res = await api.get('/categories');
-  return z.array(CategorySchema).parse(res.data.data);
+  return listSchema(CategorySchema).parse(res.data).data;
 }
 ```
 
@@ -57,7 +62,7 @@ export const useCategories = () =>
 ## 5. Mock — `features/<f>/mocks/`
 
 - Data in `<f>.data.ts` — realistic, mixed Arabic/English names, typed with the schema type.
-- Handler in `<f>.handlers.ts`, using the same envelope as `openapi.yaml` (`{ data }`, lists `{ data, meta: { page, pageSize, total } }`, errors `{ error: { code, message, details? } }`):
+- Handler in `<f>.handlers.ts`, using the same shape as `openapi.yaml` (single objects bare, lists `{ data }`, paginated `{ data, meta: { page, pageSize, total } }`, errors `{ error: { code, message, details? } }`):
 
 ```ts
 export const categoriesHandlers = [

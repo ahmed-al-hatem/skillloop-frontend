@@ -10,7 +10,7 @@ export type ErrorStateProps = {
 export function ErrorState({ message = 'حدث خطأ غير متوقع', onRetry }: ErrorStateProps) {
   return (
     <div role="alert" className="flex flex-col items-center gap-3 p-8 text-center">
-      <p className="text-destructive">{message}</p>
+      <p className="text-danger">{message}</p>
       {onRetry && (
         <Button variant="outline" size="sm" onClick={onRetry}>
           إعادة المحاولة

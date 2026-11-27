@@ -18,7 +18,7 @@ src/
 ├── features/
 │   └── auth/             # هيكل مجلدات فاضي، والـ features منبنيها من Figma و openapi.yaml
 ├── shared/               # مشترك للكل، وما بيعرف شي عن الـ features ولا admin-features
-│   ├── api/              # client.ts (axios + interceptors)، types.ts (ApiResponse, ApiError, Paginated)
+│   ├── api/              # client.ts (axios + interceptors)، types.ts (PageMeta, Paginated, listSchema, paginatedSchema, ApiError)
 │   ├── assets/brand/     # ملفات اللوغو SVG (شوف design/README.ar.md)
 │   ├── components/       # EmptyState, ErrorState, PageHeader, ErrorBoundary
 │   │   └── ui/           # Button, Input, Label, Card, Badge, Spinner
