@@ -36,7 +36,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 5. `src/app/` only assembles the app (providers, router, layouts).
 6. Use the `@/` alias for imports from `src/`.
 7. Before creating a UI primitive, check `src/shared/components/ui/`. A new shared component goes in its own small PR.
-8. **Admin area:** `src/features/admin/` is the shell (MUI theme, layout, side menu in `config/navigation.ts`). Each admin section is its own feature named `admin-<section>` (e.g. `admin-dashboard`), nested under `...adminRoute` in `src/app/router.tsx` with one spread line, plus one item in `ADMIN_NAV`. Shared MUI building blocks (`StatCard`, `ChartCard`…) live in `src/features/admin-ui/` — never export MUI from `features/admin/index.ts`, because the router imports it eagerly and it would land in the member bundle. MUI imports are allowed only in `src/features/admin*` (ESLint enforces it).
+8. **Admin area:** `src/features/admin/` is the shell (MUI theme, layout, side menu in `config/navigation.ts`). Each admin section is its own feature named `admin-<section>` (e.g. `admin-dashboard`), nested under `...adminRoute` in `src/app/router.tsx` with one spread line, plus one item in `ADMIN_NAV`. Shared MUI building blocks (`SectionCard`, `MetricItem`, `LegendItem`…) live in `src/features/admin-ui/` — never export MUI from `features/admin/index.ts`, because the router imports it eagerly and it would land in the member bundle. MUI imports are allowed only in `src/features/admin*` (ESLint enforces it).
 
 ## Data rules
 
@@ -52,7 +52,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 
 - Member UI: Tailwind only, combined with `cn()` from `@/shared/lib/cn`. No inline styles, no CSS modules, no raw hex colors — use tokens (`bg-primary`, `text-muted-foreground`, `border-border`).
 - The UI is Arabic-first and **RTL**: use logical classes (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `text-end`). Never `ml-`/`mr-`/`pl-`/`pr-`/`left-`/`right-`/`text-left`/`text-right`.
-- Admin UI (`src/features/admin*`): MUI components + the admin theme (`sx` with theme values like `color: 'text.secondary'`, `p: 2`), no raw colors. Write `sx` in LTR terms (`ml`, `left`); the RTL plugin flips them. Mirror directional icons with `flipInRtl`. Don't mix Tailwind classes into MUI components.
+- Admin UI (`src/features/admin*`): dark navy look (see `design/README.md`), MUI components + the admin theme (`sx` with theme values like `color: 'text.secondary'`, `p: 2`), no raw colors. Write `sx` in LTR terms (`ml`, `left`); the RTL plugin flips them. Mirror directional icons with `flipInRtl`. Don't mix Tailwind classes into MUI components.
 - Every data view handles loading, error (`ErrorState`) and empty (`EmptyState`) states.
 - Named exports only. One component per file, PascalCase file name. Props type is `<Component>Props`.
 - Use `ROUTES` from `@/shared/constants/routes` instead of hard-coded paths.

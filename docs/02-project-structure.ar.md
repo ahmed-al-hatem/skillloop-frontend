@@ -63,7 +63,7 @@ features/admin/                  # الهيكل المشترك لكل أقسام
 ├── theme/
 │   ├── AdminThemeProvider.tsx   # Emotion cache بيدعم RTL + ثيم MUI
 │   ├── createAdminCache.ts      # stylis-plugin-rtl + `@layer mui` (ليما يتضاربوا Tailwind و MUI)
-│   ├── createAdminTheme.ts      # الألوان والخط من متغيرات الهوية بـ styles/index.css
+│   ├── createAdminTheme.ts      # ثيم غامق: كحلي + ألوان الهوية من متغيرات styles/index.css
 │   ├── customizations/          # تخصيص المكونات، ملف لكل مجموعة (inputs، navigation، surfaces…)
 │   └── flipInRtl.ts             # بيقلب أيقونات الأسهم بالـ RTL
 ├── components/                  # AdminLayout، SideMenu، SideMenuMobile، AppNavbar، Header، المسار…
@@ -72,7 +72,7 @@ features/admin/                  # الهيكل المشترك لكل أقسام
 ├── strings.ts                   # نصوص الهيكل (جاهزة للترجمة)
 └── routes.tsx                   # adminRoute: الـ route تبع /admin (lazy)
 
-features/admin-ui/               # مكونات MUI مشتركة بين الأقسام: StatCard، ChartCard…
+features/admin-ui/               # مكونات MUI مشتركة بين الأقسام: SectionCard، MetricItem، LegendItem…
                                  # (بتستوردها صفحات الإدارة الـ lazy بس — أبداً من src/app)
 
 features/admin-<section>/        # feature لكل قسم: admin-dashboard، admin-categories…

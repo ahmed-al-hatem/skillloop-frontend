@@ -1,14 +1,14 @@
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { ErrorState } from '@/shared/components/ErrorState';
 import { useAdminDashboard } from '../api/adminDashboard.queries';
-import { AttentionList } from '../components/AttentionList';
-import { BookingsByStatusChart } from '../components/BookingsByStatusChart';
+import { AttentionCard } from '../components/AttentionCard';
+import { BookingsCard } from '../components/BookingsCard';
 import { DashboardSkeleton } from '../components/DashboardSkeleton';
-import { DashboardStats } from '../components/DashboardStats';
-import { MembersChart } from '../components/MembersChart';
+import { PointsOverviewCard } from '../components/PointsOverviewCard';
 import { dashboardStrings as t } from '../strings';
 
 /** /admin — platform numbers from `GET /admin/dashboard` (SRS ADM-01). */
@@ -16,10 +16,15 @@ export function AdminDashboardPage() {
   const { data, isPending, isError, error, refetch } = useAdminDashboard();
 
   return (
-    <Stack spacing={2} sx={{ width: '100%' }}>
-      <Typography component="h1" variant="h4">
-        {t.title}
-      </Typography>
+    <Stack spacing={3} sx={{ width: '100%' }}>
+      <Box>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {t.overline}
+        </Typography>
+        <Typography component="h1" variant="h4">
+          {t.greeting}
+        </Typography>
+      </Box>
 
       {isPending ? (
         <DashboardSkeleton />
@@ -29,16 +34,13 @@ export function AdminDashboardPage() {
         <EmptyState title={t.emptyTitle} description={t.emptyDescription} />
       ) : (
         <>
-          <DashboardStats data={data} />
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, lg: 7 }}>
-              <BookingsByStatusChart bookingsByStatus={data.bookingsByStatus} />
+          <PointsOverviewCard data={data} />
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <BookingsCard bookingsByStatus={data.bookingsByStatus} />
             </Grid>
-            <Grid size={{ xs: 12, lg: 5 }}>
-              <Stack spacing={2}>
-                <MembersChart members={data.members} />
-                <AttentionList data={data} />
-              </Stack>
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <AttentionCard data={data} />
             </Grid>
           </Grid>
         </>

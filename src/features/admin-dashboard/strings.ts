@@ -2,36 +2,46 @@ import type { BookingStatus } from './schemas/adminDashboard.schema';
 
 /** UI text of the admin dashboard, in one place so it moves easily to i18n later. */
 export const dashboardStrings = {
-  title: 'لوحة المؤشرات',
+  overline: 'نظرة عامة على المنصة',
+  greeting: 'مرحباً بعودتك 👋',
   loadError: 'تعذّر تحميل أرقام لوحة المؤشرات',
   emptyTitle: 'لا توجد بيانات بعد',
   emptyDescription: 'ستظهر الأرقام هنا عندما يسجّل أول عضو.',
-  stats: {
-    members: 'الأعضاء',
-    membersCaption: (verified: string, suspended: string) =>
-      `${verified} موثّق · ${suspended} موقوف`,
-    activeServices: 'الخدمات النشطة',
-    activeMembers30d: 'أعضاء نشطون',
-    activeMembers30dCaption: 'لديهم حجز خلال آخر 30 يوماً',
-    pointsInCirculation: 'النقاط المتداولة',
-    pointsInCirculationCaption: 'المتاحة + المحجوزة لكل الأعضاء',
-    pointsPerActiveMember: 'النقاط لكل عضو نشط',
-    pointsPerActiveMemberCaption: 'مؤشر التضخم',
+  points: {
+    title: 'النقاط المتداولة',
+    hint: 'المتاحة + المحجوزة لكل الأعضاء',
+    perActiveMember: (value: string) => `${value} لكل عضو نشط`,
   },
-  bookings: {
-    title: 'الحجوزات حسب الحالة',
-    subtitle: (total: string) => `الإجمالي ${total}`,
-    seriesLabel: 'عدد الحجوزات',
-  },
-  members: {
+  verification: {
     title: 'توثيق الأعضاء',
     verified: 'موثّق',
     unverified: 'غير موثّق',
+    percent: (value: string) => `${value}%`,
+  },
+  metrics: {
+    members: 'الأعضاء',
+    activeServices: 'الخدمات النشطة',
+    activeMembers30d: 'نشطون (30 يوماً)',
+    suspended: 'موقوفون',
+  },
+  bookings: {
+    title: 'الحجوزات',
+    total: 'إجمالي الحجوزات',
+    groups: {
+      inProgress: 'جارية',
+      done: 'منتهية',
+      disputed: 'في نزاع',
+      closed: 'ملغاة أو مرفوضة',
+    },
   },
   attention: {
     title: 'بحاجة لانتباهك',
     openDisputes: 'نزاعات مفتوحة',
-    pendingSuggestions: 'اقتراحات تصنيفات معلّقة',
+    openDisputesHint: 'بانتظار قرار المدير',
+    pendingSuggestions: 'اقتراحات تصنيفات',
+    pendingSuggestionsHint: 'أسماء «أخرى» بانتظار المراجعة',
+    needsReview: 'تحتاج مراجعة',
+    allClear: 'لا شيء',
   },
   bookingStatus: {
     PENDING: 'بانتظار الرد',

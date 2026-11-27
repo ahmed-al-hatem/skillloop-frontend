@@ -61,7 +61,7 @@ features/admin/                  # the shell, shared by every admin section
 ├── theme/
 │   ├── AdminThemeProvider.tsx   # RTL-aware Emotion cache + MUI theme
 │   ├── createAdminCache.ts      # stylis-plugin-rtl + `@layer mui` (so Tailwind and MUI don't fight)
-│   ├── createAdminTheme.ts      # palette/font from the brand CSS variables in styles/index.css
+│   ├── createAdminTheme.ts      # dark theme: navy + brand colors from the CSS variables in styles/index.css
 │   ├── customizations/          # component overrides, one file per group (inputs, navigation, surfaces…)
 │   └── flipInRtl.ts             # mirrors arrow icons in RTL
 ├── components/                  # AdminLayout, SideMenu, SideMenuMobile, AppNavbar, Header, breadcrumbs…
@@ -70,7 +70,7 @@ features/admin/                  # the shell, shared by every admin section
 ├── strings.ts                   # shell texts (ready for i18n)
 └── routes.tsx                   # adminRoute: the lazy /admin layout route
 
-features/admin-ui/               # MUI building blocks shared by the sections: StatCard, ChartCard…
+features/admin-ui/               # MUI building blocks shared by the sections: SectionCard, MetricItem, LegendItem…
                                  # (imported only by lazy admin pages — never by src/app)
 
 features/admin-<section>/        # one feature per section: admin-dashboard, admin-categories…
