@@ -41,7 +41,7 @@ Show server validation errors (422) from `ApiRequestError.errors` with `form.set
 ## Styling
 
 - **Tailwind only**, combined with `cn()`: `cn('p-4', isActive && 'bg-accent')`.
-- Use **tokens**, never raw colors: `bg-primary`, `text-muted-foreground`, `border-border`, `bg-card`, `text-destructive`. Tokens live in `src/styles/index.css` (placeholder values until the final design).
+- Use **tokens**, never raw colors: `bg-primary`, `text-muted-foreground`, `border-border`, `bg-card`, `text-destructive`. Tokens live in `src/styles/index.css` and come from the brand palette — see [design/README.md](../design/README.md).
 - No inline `style={{}}`, no CSS modules.
 
 ## RTL (Arabic first)

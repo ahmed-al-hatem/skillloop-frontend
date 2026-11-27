@@ -15,6 +15,7 @@ src/
 │   └── auth/             # empty folder skeleton — features are built from Figma + openapi.yaml
 ├── shared/               # shared by everyone, knows nothing about features
 │   ├── api/              # client.ts (axios + interceptors), types.ts (ApiResponse, ApiError, Paginated)
+│   ├── assets/brand/     # logo SVGs (see design/README.md)
 │   ├── components/       # EmptyState, ErrorState, PageHeader, ErrorBoundary
 │   │   └── ui/           # Button, Input, Label, Card, Badge, Spinner
 │   ├── hooks/            # useDebounce, useMediaQuery

@@ -18,6 +18,8 @@
 | 08  | [المساعدات الذكية](08-ai-assistants.ar.md)   | استخدام Claude Code وCodex والـ skills  |
 | 09  | [إعداد الريبو](09-repo-setup.ar.md)          | إعدادات GitHub لمرة وحدة (صاحب الريبو)  |
 
+هوية البراند (الألوان، الخطوط، اللوغو): [`design/README.ar.md`](../design/README.ar.md).
+
 نسخة مختصرة من القواعد للمساعدات الذكية: [`AGENTS.md`](../AGENTS.md).
 
 </div>
