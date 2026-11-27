@@ -20,13 +20,13 @@ export function Input({ className, error, id, ...props }: InputProps) {
           'h-10 w-full rounded-md border border-input bg-background px-3 text-start',
           'placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
           'disabled:cursor-not-allowed disabled:opacity-50',
-          error && 'border-destructive',
+          error && 'border-danger',
           className,
         )}
         {...props}
       />
       {error && (
-        <p id={errorId} className="text-sm text-destructive">
+        <p id={errorId} className="text-sm text-danger">
           {error}
         </p>
       )}

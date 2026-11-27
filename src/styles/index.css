@@ -1,16 +1,26 @@
 @import 'tailwindcss';
 /* Brand fonts, self-hosted (variable weight 100–900). See design/README.md. */
 @import '@fontsource-variable/noto-sans-arabic';
+/* Inter: numbers, IDs, emails and other Latin text (admin design). */
+@import '@fontsource-variable/inter';
 @import '@fontsource-variable/noto-sans';
 
+/* `light:` variant — styles that apply only in the light theme (e.g. `light:hidden`). */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
 /*
- * Design tokens — SkillLoop brand (design/README.md).
+ * Design tokens — SkillLoop brand (design/README.md) + admin design "Components & Tokens" board.
  * Names follow shadcn/ui, so `npx shadcn@latest add <component>` works without changes.
  * In components use the token classes (bg-primary, text-muted-foreground, border-border...),
- * never raw hex values. The four brand colors are defined once here; every other token
- * is derived from them.
+ * never raw hex values. Hex values live only in this file.
+ *
+ * Dark is the default theme. Light is turned on with `data-theme="light"` on <html>.
+ * Every grey derives from --brand-charcoal (#2D2B35). Every fg/bg pair reaches 4.5:1
+ * (checked for both themes: text on background/surface/surface-raised/sidebar,
+ * <name> on <name>-muted, and <name>-foreground on <name>).
  */
 :root {
+  color-scheme: dark;
   --radius: 0.625rem;
 
   /* Brand palette */
@@ -19,29 +29,97 @@
   --brand-charcoal: #2d2b35;
   --brand-white: #ffffff;
 
-  --background: var(--brand-white);
-  --foreground: var(--brand-charcoal);
-  --card: var(--brand-white);
-  --card-foreground: var(--brand-charcoal);
-  --popover: var(--brand-white);
-  --popover-foreground: var(--brand-charcoal);
+  /* Layers (dark): page < sidebar < surface (cards) < surface-raised (popovers, menus) */
+  --background: #16151b;
+  --foreground: var(--brand-white);
+  --sidebar: #1a1920;
+  --sidebar-foreground: var(--brand-white);
+  --surface: #201f27;
+  --surface-raised: var(--brand-charcoal);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+
   --primary: var(--brand-purple);
   --primary-foreground: var(--brand-white);
   --secondary: var(--brand-lime);
   --secondary-foreground: var(--brand-charcoal);
-  --muted: color-mix(in oklab, var(--brand-charcoal) 4%, var(--brand-white));
-  --muted-foreground: color-mix(in oklab, var(--brand-charcoal) 72%, var(--brand-white));
-  --accent: color-mix(in oklab, var(--brand-purple) 8%, var(--brand-white));
-  --accent-foreground: var(--brand-charcoal);
-  --destructive: oklch(0.55 0.2 25);
-  --border: color-mix(in oklab, var(--brand-charcoal) 12%, var(--brand-white));
-  --input: color-mix(in oklab, var(--brand-charcoal) 16%, var(--brand-white));
+  --muted: var(--brand-charcoal);
+  --muted-foreground: #a6a3b3;
+  --accent: #302247;
+  --accent-foreground: var(--foreground);
+  --destructive: #dc2626;
+  --destructive-foreground: var(--brand-white);
+
+  --border: #37343f;
+  --border-subtle: #2b2933;
+  --input: #45424f;
   --ring: var(--brand-purple);
+
+  /* Semantic colors: <name> = text/icon/solid, -muted = tinted background, -foreground = text on solid */
+  --success: #4ade80;
+  --success-muted: #1f3628;
+  --success-foreground: #16151b;
+  --warning: #fbbf24;
+  --warning-muted: #3e301a;
+  --warning-foreground: #16151b;
+  --info: #60a5fa;
+  --info-muted: #1f2c47;
+  --info-foreground: #16151b;
+  --danger: #f87171;
+  --danger-muted: #3e2123;
+  --danger-foreground: #16151b;
+
+  /* Motion (admin design). All of it is turned off under prefers-reduced-motion. */
+  --duration-micro: 150ms;
+  --duration-modal: 260ms;
+  --duration-drawer: 320ms;
+  --duration-toast: 380ms;
+  --duration-shimmer: 1.4s;
+  --toast-auto-hide: 4.5s;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --background: #f6f5f9;
+  --foreground: var(--brand-charcoal);
+  --sidebar: var(--brand-white);
+  --sidebar-foreground: var(--brand-charcoal);
+  --surface: var(--brand-white);
+  --surface-raised: var(--brand-white);
+
+  --secondary-foreground: var(--brand-charcoal);
+  --muted: #f1f0f5;
+  --muted-foreground: #6b6876;
+  --accent: #f0e8ff;
+
+  --border: #e6e4ec;
+  --border-subtle: #f0eef4;
+  --input: #d9d6e0;
+
+  --success: #1b7340;
+  --success-muted: #e7f6ec;
+  --success-foreground: var(--brand-white);
+  --warning: #8a4b00;
+  --warning-muted: #fff3dc;
+  --warning-foreground: var(--brand-white);
+  --info: #1a5db0;
+  --info-muted: #e8f1fd;
+  --info-foreground: var(--brand-white);
+  --danger: #b3261e;
+  --danger-muted: #fdecec;
+  --danger-foreground: var(--brand-white);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -55,24 +133,59 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-muted: var(--info-muted);
+  --color-info-foreground: var(--info-foreground);
+  --color-danger: var(--danger);
+  --color-danger-muted: var(--danger-muted);
+  --color-danger-foreground: var(--danger-foreground);
 
   /* Raw brand colors — for marketing/illustration only; prefer the semantic tokens above. */
   --color-brand-purple: var(--brand-purple);
   --color-brand-lime: var(--brand-lime);
   --color-brand-charcoal: var(--brand-charcoal);
 
+  /* 6 (badge) · 8 · 10 (button, input) · 14 (card, dialog) */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  /* duration-micro, duration-modal, duration-drawer, duration-toast */
+  --transition-duration-micro: var(--duration-micro);
+  --transition-duration-modal: var(--duration-modal);
+  --transition-duration-drawer: var(--duration-drawer);
+  --transition-duration-toast: var(--duration-toast);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-shimmer: shimmer var(--duration-shimmer) ease infinite;
+
   /* Brand fonts first; system fonts only as a fallback while they load. */
   --font-sans:
-    'Noto Sans Arabic Variable', 'Noto Sans Variable', system-ui, -apple-system, 'Segoe UI', Tahoma,
-    'Geeza Pro', Arial, sans-serif;
+    'Noto Sans Arabic Variable', 'Inter Variable', 'Noto Sans Variable', system-ui, -apple-system,
+    'Segoe UI', Tahoma, 'Geeza Pro', Arial, sans-serif;
+  /* font-latin: numbers, IDs, emails, percentages (wrap them in <bdi> or dir="ltr"). */
+  --font-latin: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+
+  @keyframes shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: 0 0;
+    }
+  }
 }
 
 @layer base {
@@ -81,5 +194,21 @@
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
+  }
+  /* Focus ring: 2px brand purple, offset 2px, in both themes. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
