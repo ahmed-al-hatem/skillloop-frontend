@@ -170,6 +170,9 @@
   --transition-duration-toast: var(--duration-toast);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --animate-shimmer: shimmer var(--duration-shimmer) ease infinite;
+  --animate-toast-in: toast-in var(--duration-toast) cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  /* The toast duration bar empties toward the start side over the auto-hide time. */
+  --animate-toast-progress: toast-progress var(--toast-auto-hide) linear forwards;
 
   /* Brand fonts first; system fonts only as a fallback while they load. */
   --font-sans:
@@ -184,6 +187,20 @@
     }
     to {
       background-position: 0 0;
+    }
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.95);
+    }
+  }
+  @keyframes toast-progress {
+    from {
+      inline-size: 100%;
+    }
+    to {
+      inline-size: 0;
     }
   }
 }
