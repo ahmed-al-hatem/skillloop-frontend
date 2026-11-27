@@ -8,7 +8,7 @@ Human docs live in `docs/` (start at `docs/README.md`).
 
 SkillLoop is a skill-exchange platform where people trade skills using **points** instead of money: members offer services, others book them with points, the points are held until the work is confirmed, and both sides review each other. The full model is in the backend's SRS and `openapi.yaml`.
 
-Screens are built from the **Figma designs**. Until a design arrives for a feature, there is no screen for it — don't invent UI.
+Screens are built from the **Figma designs**. Until a design arrives for a feature, there is no screen for it — don't invent UI. **Exception:** the admin panel (`/admin`) is built from the [MUI dashboard template](https://mui.com/material-ui/getting-started/templates/dashboard/), adapted to the brand and the SRS.
 
 This repo is the **web frontend only**. The API is built by a separate backend team.
 
@@ -17,7 +17,7 @@ This repo is the **web frontend only**. The API is built by a separate backend t
 
 ## Stack
 
-Vite · React · TypeScript (strict) · Tailwind CSS v4 · React Router · TanStack Query · axios · Zod · react-hook-form · MSW · shadcn/ui-compatible primitives.
+Vite · React · TypeScript (strict) · Tailwind CSS v4 · React Router · TanStack Query · axios · Zod · react-hook-form · MSW · shadcn/ui-compatible primitives. Admin area only: MUI (`@mui/material`, Emotion, `stylis-plugin-rtl`).
 Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.json`. If you add a dependency, tell the user so they can inform their teammate.
 
 ## Commands
@@ -36,6 +36,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 5. `src/app/` only assembles the app (providers, router, layouts).
 6. Use the `@/` alias for imports from `src/`.
 7. Before creating a UI primitive, check `src/shared/components/ui/`. A new shared component goes in its own small PR.
+8. **Admin area:** `src/features/admin/` is the shell (MUI theme, layout, side menu in `config/navigation.ts`). Each admin section is its own feature named `admin-<section>` (e.g. `admin-dashboard`), nested under `...adminRoute` in `src/app/router.tsx` with one spread line, plus one item in `ADMIN_NAV`. MUI imports are allowed only in `src/features/admin*` (ESLint enforces it).
 
 ## Data rules
 
@@ -49,8 +50,9 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 
 ## UI rules
 
-- Tailwind only, combined with `cn()` from `@/shared/lib/cn`. No inline styles, no CSS modules, no raw hex colors — use tokens (`bg-primary`, `text-muted-foreground`, `border-border`).
+- Member UI: Tailwind only, combined with `cn()` from `@/shared/lib/cn`. No inline styles, no CSS modules, no raw hex colors — use tokens (`bg-primary`, `text-muted-foreground`, `border-border`).
 - The UI is Arabic-first and **RTL**: use logical classes (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `text-end`). Never `ml-`/`mr-`/`pl-`/`pr-`/`left-`/`right-`/`text-left`/`text-right`.
+- Admin UI (`src/features/admin*`): MUI components + the admin theme (`sx` with theme values like `color: 'text.secondary'`, `p: 2`), no raw colors. Write `sx` in LTR terms (`ml`, `left`); the RTL plugin flips them. Mirror directional icons with `flipInRtl`. Don't mix Tailwind classes into MUI components.
 - Every data view handles loading, error (`ErrorState`) and empty (`EmptyState`) states.
 - Named exports only. One component per file, PascalCase file name. Props type is `<Component>Props`.
 - Use `ROUTES` from `@/shared/constants/routes` instead of hard-coded paths.

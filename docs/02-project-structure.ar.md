@@ -14,6 +14,7 @@ src/
 │   ├── router.tsx        # بيجمع routes كل feature
 │   └── layouts/          # MainLayout (هيدر)، AuthLayout (كرت بالنص)
 ├── features/
+│   ├── admin/            # هيكل لوحة الإدارة (MUI) — شوف "منطقة الإدارة" تحت
 │   └── auth/             # هيكل مجلدات فاضي، والـ features منبنيها من Figma و openapi.yaml
 ├── shared/               # مشترك للكل، وما بيعرف شي عن الـ features
 │   ├── api/              # client.ts (axios + interceptors)، types.ts (ApiResponse, ApiError, Paginated)
@@ -52,6 +53,30 @@ features/auth/
 ```
 
 اعمل بس المجلدات اللي بتحتاجها. الـ feature الصغيرة بتكفيها ملفات (`types.ts`) بدل مجلدات.
+
+## منطقة الإدارة
+
+لوحة الإدارة (`/admin`) مبنية بـ **MUI** (من [قالب MUI dashboard](https://mui.com/material-ui/getting-started/templates/dashboard/))، وباقي التطبيق Tailwind. الـ MUI بينحمّل بس لما حدا يفتح `/admin`، فالأعضاء ما بينزلوه أبداً، وESLint بيمنع استيراد MUI برّا `src/features/admin*`.
+
+```
+features/admin/                  # الهيكل المشترك لكل أقسام الإدارة
+├── theme/
+│   ├── AdminThemeProvider.tsx   # Emotion cache بيدعم RTL + ثيم MUI
+│   ├── createAdminCache.ts      # stylis-plugin-rtl + `@layer mui` (ليما يتضاربوا Tailwind و MUI)
+│   ├── createAdminTheme.ts      # الألوان والخط من متغيرات الهوية بـ styles/index.css
+│   ├── customizations/          # تخصيص المكونات، ملف لكل مجموعة (inputs، navigation، surfaces…)
+│   └── flipInRtl.ts             # بيقلب أيقونات الأسهم بالـ RTL
+├── components/                  # AdminLayout، SideMenu، SideMenuMobile، AppNavbar، Header، المسار…
+├── config/navigation.ts         # ADMIN_NAV — عنصر لكل قسم
+├── strings.ts                   # نصوص الهيكل (جاهزة للترجمة)
+├── routes.tsx                   # adminRoute: الـ route تبع /admin (lazy)
+└── index.ts
+
+features/admin-<section>/        # feature لكل قسم: admin-dashboard، admin-categories…
+└── (api/، components/، pages/، schemas/، mocks/، routes.tsx، index.ts — متل أي feature)
+```
+
+**إضافة قسم إدارة:** اعمل `features/admin-<section>/`، وزيد سطر spread واحد جوا بلوك `...adminRoute` بـ `src/app/router.tsx`، وعنصر واحد بـ `ADMIN_NAV`.
 
 ## القواعد الأربعة (ESLint بيفرض أول قاعدتين)
 

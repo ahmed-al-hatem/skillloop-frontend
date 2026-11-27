@@ -12,6 +12,7 @@ src/
 │   ├── router.tsx        # collects the routes of every feature
 │   └── layouts/          # MainLayout (header), AuthLayout (centered card)
 ├── features/
+│   ├── admin/            # admin panel shell (MUI) — see "The admin area" below
 │   └── auth/             # empty folder skeleton — features are built from Figma + openapi.yaml
 ├── shared/               # shared by everyone, knows nothing about features
 │   ├── api/              # client.ts (axios + interceptors), types.ts (ApiResponse, ApiError, Paginated)
@@ -50,6 +51,30 @@ features/auth/
 ```
 
 Create only the folders you need. A small feature can use files (`types.ts`) instead of folders.
+
+## The admin area
+
+The admin panel (`/admin`) uses **MUI** (from the [MUI dashboard template](https://mui.com/material-ui/getting-started/templates/dashboard/)); the rest of the app is Tailwind. MUI is loaded lazily, so members never download it, and ESLint blocks MUI imports outside `src/features/admin*`.
+
+```
+features/admin/                  # the shell, shared by every admin section
+├── theme/
+│   ├── AdminThemeProvider.tsx   # RTL-aware Emotion cache + MUI theme
+│   ├── createAdminCache.ts      # stylis-plugin-rtl + `@layer mui` (so Tailwind and MUI don't fight)
+│   ├── createAdminTheme.ts      # palette/font from the brand CSS variables in styles/index.css
+│   ├── customizations/          # component overrides, one file per group (inputs, navigation, surfaces…)
+│   └── flipInRtl.ts             # mirrors arrow icons in RTL
+├── components/                  # AdminLayout, SideMenu, SideMenuMobile, AppNavbar, Header, breadcrumbs…
+├── config/navigation.ts         # ADMIN_NAV — one item per admin section
+├── strings.ts                   # shell texts (ready for i18n)
+├── routes.tsx                   # adminRoute: the lazy /admin layout route
+└── index.ts
+
+features/admin-<section>/        # one feature per section: admin-dashboard, admin-categories…
+└── (api/, components/, pages/, schemas/, mocks/, routes.tsx, index.ts — like any feature)
+```
+
+**Adding an admin section:** create `features/admin-<section>/`, add one spread line inside the `...adminRoute` block of `src/app/router.tsx`, and one item in `ADMIN_NAV`.
 
 ## The 4 rules (ESLint enforces 1 and 2)
 

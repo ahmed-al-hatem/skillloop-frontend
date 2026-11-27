@@ -43,6 +43,7 @@ Show server validation errors (422) from `ApiRequestError.errors` with `form.set
 - **Tailwind only**, combined with `cn()`: `cn('p-4', isActive && 'bg-accent')`.
 - Use **tokens**, never raw colors: `bg-primary`, `text-muted-foreground`, `border-border`, `bg-card`, `text-destructive`. Tokens live in `src/styles/index.css` and come from the brand palette — see [design/README.md](../design/README.md).
 - No inline `style={{}}`, no CSS modules.
+- **Exception — admin area** (`src/features/admin*`): MUI components with the admin theme (`sx={{ p: 2, color: 'text.secondary' }}`). Write `sx` in LTR terms; the RTL plugin flips them. Don't mix Tailwind classes into MUI. See [02 · The admin area](02-project-structure.md#the-admin-area).
 
 ## RTL (Arabic first)
 

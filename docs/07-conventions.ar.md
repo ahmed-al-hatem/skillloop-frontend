@@ -45,6 +45,7 @@ const form = useForm<LoginInput>({ resolver: zodResolver(LoginInputSchema) });
 - **Tailwind بس**، ومنجمع الكلاسات بـ `cn()`: `cn('p-4', isActive && 'bg-accent')`.
 - استخدم **الـ tokens** مو ألوان مباشرة: `bg-primary`، `text-muted-foreground`، `border-border`، `bg-card`، `text-destructive`. موجودين بـ `src/styles/index.css` ومأخوذين من ألوان الهوية — شوف [design/README.ar.md](../design/README.ar.md).
 - ممنوع `style={{}}` وممنوع CSS modules.
+- **استثناء — منطقة الإدارة** (`src/features/admin*`): مكونات MUI مع ثيم الإدارة (`sx={{ p: 2, color: 'text.secondary' }}`). اكتب الـ `sx` كأنه LTR، والـ RTL plugin بيقلبه. لا تخلط كلاسات Tailwind مع MUI. شوف [02 · منطقة الإدارة](02-project-structure.ar.md#منطقة-الإدارة).
 
 ## RTL (العربي أولاً)
 
