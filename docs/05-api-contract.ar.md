@@ -39,7 +39,18 @@
 
 الـ `code` ثابت، فاستخدمه بالكود. الـ `message` مترجم جاهز، فاعرضه للمستخدم. والـ `details` بيجي بس مع `VALIDATION_ERROR`، وفيه عنصر لكل حقل. القائمة الكاملة للأكواد موجودة بأول `openapi.yaml`.
 
-> ⚠️ ملفات `src/shared/api/client.ts` و`src/shared/api/types.ts` لسا ماشيين على المسودة الأولى (خطأ مسطّح فيه `errors`، و`perPage`). لازم نظبطهم على هالصيغة لما نبني أول endpoint حقيقي (auth).
+## بالفرونت إند (`src/shared/api/`)
+
+| الرد بـ `openapi.yaml`        | مثال             | التحقق بـ                                        |
+| ----------------------------- | ---------------- | ------------------------------------------------ |
+| كائن مفرد (بدون غلاف)         | `GET /me`        | `MeSchema.parse(res.data)`                       |
+| قائمة `{ data }`              | `GET /me/skills` | `listSchema(SkillSchema).parse(res.data).data`   |
+| قائمة بصفحات `{ data, meta }` | `GET /services`  | `paginatedSchema(ServiceSchema).parse(res.data)` |
+
+- الـ `PageMeta` هو `{ page, pageSize, total }`. لعدد الصفحات استخدم `totalPages(meta)`.
+- كل فشل بيصير `ApiRequestError` فيه `code` و`message` و`status` و`details`. للفورمات، `error.fieldErrors()` بيعطيك `{ field: message }`.
+- الـ client بيبعت `Authorization` و`Accept-Language` (`ar` أو `en`، من `<html lang>`) مع كل طلب.
+- تجديد التوكن (`POST /auth/refresh`) بينضاف مع ميزة الـ auth. لهداك الوقت، أي `401` بيمسح التوكن.
 
 ## بناء endpoint
 

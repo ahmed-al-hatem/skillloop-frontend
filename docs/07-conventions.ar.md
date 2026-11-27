@@ -38,7 +38,7 @@ const form = useForm<LoginInput>({ resolver: zodResolver(LoginInputSchema) });
 <Input id="email" {...form.register('email')} error={form.formState.errors.email?.message} />;
 ```
 
-أخطاء التحقق من السيرفر (422) بتجي بـ `ApiRequestError.errors`، اعرضها بـ `form.setError(field, …)`.
+أخطاء التحقق من السيرفر (`VALIDATION_ERROR`، 400) بتجيبها من `ApiRequestError.fieldErrors()`، واعرضها بـ `form.setError(field, …)`.
 
 ## التنسيق (Styling)
 
