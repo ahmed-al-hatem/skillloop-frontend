@@ -1,32 +1,42 @@
 @import 'tailwindcss';
+/* Brand fonts, self-hosted (variable weight 100–900). See design/README.md. */
+@import '@fontsource-variable/noto-sans-arabic';
+@import '@fontsource-variable/noto-sans';
 
 /*
- * Design tokens — PLACEHOLDER values until the designer delivers the final palette.
+ * Design tokens — SkillLoop brand (design/README.md).
  * Names follow shadcn/ui, so `npx shadcn@latest add <component>` works without changes.
  * In components use the token classes (bg-primary, text-muted-foreground, border-border...),
- * never raw hex values.
+ * never raw hex values. The four brand colors are defined once here; every other token
+ * is derived from them.
  */
 :root {
   --radius: 0.625rem;
 
-  --background: oklch(0.99 0.003 175);
-  --foreground: oklch(0.22 0.02 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.02 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.02 250);
-  --primary: oklch(0.55 0.15 175);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.01 175);
-  --secondary-foreground: oklch(0.3 0.03 200);
-  --muted: oklch(0.96 0.005 175);
-  --muted-foreground: oklch(0.5 0.02 250);
-  --accent: oklch(0.95 0.02 175);
-  --accent-foreground: oklch(0.3 0.03 200);
+  /* Brand palette */
+  --brand-purple: #8038ff;
+  --brand-lime: #b8ed50;
+  --brand-charcoal: #2d2b35;
+  --brand-white: #ffffff;
+
+  --background: var(--brand-white);
+  --foreground: var(--brand-charcoal);
+  --card: var(--brand-white);
+  --card-foreground: var(--brand-charcoal);
+  --popover: var(--brand-white);
+  --popover-foreground: var(--brand-charcoal);
+  --primary: var(--brand-purple);
+  --primary-foreground: var(--brand-white);
+  --secondary: var(--brand-lime);
+  --secondary-foreground: var(--brand-charcoal);
+  --muted: color-mix(in oklab, var(--brand-charcoal) 4%, var(--brand-white));
+  --muted-foreground: color-mix(in oklab, var(--brand-charcoal) 72%, var(--brand-white));
+  --accent: color-mix(in oklab, var(--brand-purple) 8%, var(--brand-white));
+  --accent-foreground: var(--brand-charcoal);
   --destructive: oklch(0.55 0.2 25);
-  --border: oklch(0.9 0.01 250);
-  --input: oklch(0.9 0.01 250);
-  --ring: oklch(0.55 0.15 175);
+  --border: color-mix(in oklab, var(--brand-charcoal) 12%, var(--brand-white));
+  --input: color-mix(in oklab, var(--brand-charcoal) 16%, var(--brand-white));
+  --ring: var(--brand-purple);
 }
 
 @theme inline {
@@ -49,15 +59,20 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* Raw brand colors — for marketing/illustration only; prefer the semantic tokens above. */
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-charcoal: var(--brand-charcoal);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* System fonts that render Arabic well on Windows, macOS, Android and Linux. */
+  /* Brand fonts first; system fonts only as a fallback while they load. */
   --font-sans:
-    system-ui, -apple-system, 'Segoe UI', Tahoma, 'Geeza Pro', 'Noto Sans Arabic', 'Noto Sans',
-    Arial, sans-serif;
+    'Noto Sans Arabic Variable', 'Noto Sans Variable', system-ui, -apple-system, 'Segoe UI', Tahoma,
+    'Geeza Pro', Arial, sans-serif;
 }
 
 @layer base {
