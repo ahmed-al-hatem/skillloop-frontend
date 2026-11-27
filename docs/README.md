@@ -16,4 +16,6 @@ Every doc exists in English (`name.md`) and Arabic (`name.ar.md`). When you chan
 | 08  | [AI assistants](08-ai-assistants.md)         | Using Claude Code / Codex and the project skills |
 | 09  | [Repository setup](09-repo-setup.md)         | One-time GitHub settings (repo owner)            |
 
+Brand identity (colors, fonts, logo): [`design/README.md`](../design/README.md).
+
 Short version of the rules for AI agents: [`AGENTS.md`](../AGENTS.md).

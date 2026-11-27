@@ -22,6 +22,7 @@ src/
 │   └── reviews/          # التقييم والشارات
 ├── shared/               # مشترك للكل، وما بيعرف شي عن الـ features
 │   ├── api/              # client.ts (axios + interceptors)، types.ts (ApiResponse, ApiError, Paginated)
+│   ├── assets/brand/     # ملفات اللوغو SVG (شوف design/README.ar.md)
 │   ├── components/       # EmptyState, ErrorState, PageHeader, ErrorBoundary
 │   │   └── ui/           # Button, Input, Label, Card, Badge, Spinner
 │   ├── hooks/            # useDebounce, useMediaQuery
