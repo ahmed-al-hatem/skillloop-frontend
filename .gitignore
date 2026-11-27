@@ -29,3 +29,6 @@ Thumbs.db
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Local backend docs (SRS, ERD, openapi.yaml) — see docs/05-api-contract.md
+local-docs/
