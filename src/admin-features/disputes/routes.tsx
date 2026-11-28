@@ -6,6 +6,17 @@ export const disputesRoutes: RouteObject[] = [
   {
     path: ROUTES.admin.disputes,
     handle: { crumb: 'النزاعات' },
-    lazy: () => import('./pages/DisputesPage').then((m) => ({ Component: m.DisputesPage })),
+    children: [
+      {
+        index: true,
+        lazy: () => import('./pages/DisputesPage').then((m) => ({ Component: m.DisputesPage })),
+      },
+      {
+        path: ROUTES.admin.dispute(':id'),
+        handle: { crumb: 'تفاصيل النزاع' },
+        lazy: () =>
+          import('./pages/DisputeDetailPage').then((m) => ({ Component: m.DisputeDetailPage })),
+      },
+    ],
   },
 ];

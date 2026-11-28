@@ -9,6 +9,7 @@ export {
   useUnsuspendMember,
 } from './api/members.queries';
 export { memberStatusBadge, transactionTypeLabel } from './constants';
+export { membersRoutes } from './routes';
 export {
   PointsAdjustmentRequestSchema,
   REASON_MAX,
