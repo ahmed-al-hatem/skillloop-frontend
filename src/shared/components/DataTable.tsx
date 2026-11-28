@@ -4,7 +4,6 @@ import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { cn } from '@/shared/lib/cn';
 import { EmptyState } from './EmptyState';
 import { ErrorState } from './ErrorState';
-import { Button } from './ui/Button';
 import { Skeleton } from './ui/Skeleton';
 import { Table } from './ui/Table';
 import { TableBody } from './ui/TableBody';
@@ -111,14 +110,8 @@ export function DataTable<T>({
       className="rounded-none border-0 py-12"
       title={isFiltered ? filteredTitle : emptyTitle}
       description={isFiltered ? filteredDescription : emptyDescription}
-      action={
-        isFiltered &&
-        onClearFilters && (
-          <Button variant="outline" size="sm" onClick={onClearFilters}>
-            مسح الفلاتر
-          </Button>
-        )
-      }
+      variant={isFiltered ? 'filtered' : 'default'}
+      onClearFilters={onClearFilters}
     />
   );
 

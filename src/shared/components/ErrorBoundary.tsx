@@ -25,6 +25,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
 
   render() {
     if (!this.state.hasError) return this.props.children;
-    return this.props.fallback ?? <ErrorState onRetry={this.reset} />;
+    return (
+      this.props.fallback ?? (
+        <ErrorState
+          title="حدث خطأ غير متوقع"
+          message="أعد المحاولة، وإن تكرر الخطأ حدّث الصفحة."
+          onRetry={this.reset}
+        />
+      )
+    );
   }
 }
