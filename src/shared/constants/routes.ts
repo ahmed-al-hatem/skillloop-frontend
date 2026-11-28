@@ -9,6 +9,8 @@ const ADMIN = '/admin';
  */
 export const ROUTES = {
   home: '/',
+  /** No login screen yet (no design); the guard already sends signed-out users here. */
+  login: '/login',
   admin: {
     root: ADMIN,
     sessionExpired: `${ADMIN}/session-expired`,
