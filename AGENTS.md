@@ -27,7 +27,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 - `npm run format` — fix formatting
 - `npm run skills:sync` — copy `.agents/skills` → `.claude/skills` after editing a skill
 
-## Architecture rules (ESLint enforces 2 and 3)
+## Architecture rules (ESLint enforces 2, 3 and 8)
 
 1. Code is organized by feature: `src/features/<feature>/` with only the subfolders it needs (`api/`, `components/`, `hooks/`, `pages/`, `schemas/`, `mocks/`) plus `routes.tsx` and `index.ts`. A small feature may use single files (`types.ts`) instead of folders.
 2. `src/shared/` never imports from `src/features/`.
@@ -36,6 +36,7 @@ Package manager: **npm only**. Never use yarn/pnpm, never delete `package-lock.j
 5. `src/app/` only assembles the app (providers, router, layouts).
 6. Use the `@/` alias for imports from `src/`.
 7. Before creating a UI primitive, check `src/shared/components/ui/`. A new shared component goes in its own small PR.
+8. The admin dashboard lives in `src/admin-features/<feature>/` (`@/admin-features/<feature>`) and follows the same structure and rules as `src/features/`. `admin-features/core` exports `adminRoutes`, the only admin import in `src/app/router.tsx`. Member features and `src/shared/` never import from `src/admin-features/` (ESLint enforces this).
 
 ## Data rules
 
