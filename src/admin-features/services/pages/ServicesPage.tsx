@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ClearFiltersButton } from '@/shared/components/ClearFiltersButton';
 import { ErrorState } from '@/shared/components/ErrorState';
 import { FilterBar } from '@/shared/components/FilterBar';
@@ -9,11 +10,13 @@ import { Select, type SelectOption } from '@/shared/components/ui/Select';
 import { useListParams } from '@/shared/hooks/useListParams';
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus';
 import { useServices } from '../api/services.queries';
+import { ArchiveServiceDialog } from '../components/ArchiveServiceDialog';
 import { ServicesTable } from '../components/ServicesTable';
 import { serviceStatusBadge } from '../constants';
 import {
   ServiceListParamsSchema,
   ServiceStatusSchema,
+  type Service,
   type ServiceStatus,
 } from '../schemas/service.schema';
 
@@ -29,12 +32,15 @@ const STATUS_OPTIONS: SelectOption<ServiceStatus | typeof ALL>[] = [
 
 /**
  * `/admin/services?q=&status=`: every service, newest first. Filters and page live in the URL.
- * The category filter waits for a categories list endpoint in the codebase; archive comes in 5.4.
+ * The category filter waits for a categories list endpoint in the codebase.
  */
 export function ServicesPage() {
   const { params, setParams, setPage, reset } = useListParams(ServiceListParamsSchema);
   const services = useServices(params);
   const isOnline = useOnlineStatus();
+  // The target outlives `open` so the dialog keeps its title while it animates out.
+  const [archiveTarget, setArchiveTarget] = useState<Service | null>(null);
+  const [archiveOpen, setArchiveOpen] = useState(false);
   const { data } = services;
   // Offline before the first load: the query is paused, so say why instead of a skeleton.
   const isPausedEmpty = services.isPending && services.fetchStatus === 'paused';
@@ -85,6 +91,10 @@ export function ServicesPage() {
           isLoading={services.isPending && !isPausedEmpty}
           isFiltered={isFiltered}
           onClearFilters={reset}
+          onArchive={(service) => {
+            setArchiveTarget(service);
+            setArchiveOpen(true);
+          }}
           footer={
             data &&
             data.meta.total > 0 && (
@@ -102,6 +112,12 @@ export function ServicesPage() {
           }
         />
       )}
+
+      <ArchiveServiceDialog
+        service={archiveTarget}
+        open={archiveOpen}
+        onOpenChange={setArchiveOpen}
+      />
     </div>
   );
 }

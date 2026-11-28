@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { DataTable, type DataTableColumn } from '@/shared/components/DataTable';
+import { Button } from '@/shared/components/ui/Button';
 import { PointsAmount } from '@/shared/components/ui/PointsAmount';
 import { StatusBadge } from '@/shared/components/ui/StatusBadge';
 import { ROUTES } from '@/shared/constants/routes';
@@ -12,6 +13,8 @@ export type ServicesTableProps = {
   isLoading: boolean;
   isFiltered: boolean;
   onClearFilters: () => void;
+  /** Opens the archive dialog. Archived services have no action. */
+  onArchive: (service: Service) => void;
   footer?: ReactNode;
 };
 
@@ -26,7 +29,10 @@ function ServiceStatusBadge({ service }: { service: Service }) {
   return <StatusBadge variant={badge.variant}>{badge.label}</StatusBadge>;
 }
 
-function buildColumns(showBookings: boolean): DataTableColumn<Service>[] {
+function buildColumns(
+  showBookings: boolean,
+  onArchive: (service: Service) => void,
+): DataTableColumn<Service>[] {
   return [
     {
       id: 'title',
@@ -76,6 +82,24 @@ function buildColumns(showBookings: boolean): DataTableColumn<Service>[] {
       header: 'الحالة',
       cell: (s) => <ServiceStatusBadge service={s} />,
     },
+    {
+      id: 'actions',
+      header: 'إجراءات',
+      headerHidden: true,
+      align: 'end',
+      cell: (s) =>
+        s.status !== 'ARCHIVED' && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onArchive(s)}
+            aria-label={`أرشفة «${s.title}»`}
+            className="h-9 border-danger/40 font-semibold text-danger hover:bg-danger-muted hover:text-danger"
+          >
+            أرشفة
+          </Button>
+        ),
+    },
   ];
 }
 
@@ -85,13 +109,14 @@ export function ServicesTable({
   isLoading,
   isFiltered,
   onClearFilters,
+  onArchive,
   footer,
 }: ServicesTableProps) {
   const showBookings = Boolean(data?.some((s) => s.bookingsCount !== undefined));
   return (
     <DataTable
       label="الخدمات"
-      columns={buildColumns(showBookings)}
+      columns={buildColumns(showBookings, onArchive)}
       data={data}
       getRowId={(s) => s.id}
       isLoading={isLoading}
