@@ -1,4 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ApiRequestError } from '@/shared/api/client';
+import { QUERY_RETRY } from '@/shared/constants/query';
 import type { DisputeListParams } from '../schemas/dispute.schema';
 import type { ResolveDisputeRequest } from '../schemas/resolve-form.schema';
 import { getDispute, getDisputes, resolveDispute } from './disputes.api';
@@ -13,12 +15,14 @@ export function useDisputes(params: DisputeListParams) {
   });
 }
 
-/** One dispute with all evidence. */
+/** One dispute with all evidence. A 404 is final (no retry), so «غير موجود» shows at once. */
 export function useDispute(id: string | undefined) {
   return useQuery({
     queryKey: disputeKeys.detail(id ?? ''),
     queryFn: () => getDispute(id ?? ''),
     enabled: Boolean(id),
+    retry: (failureCount, error) =>
+      !(error instanceof ApiRequestError && error.status === 404) && failureCount < QUERY_RETRY,
   });
 }
 
