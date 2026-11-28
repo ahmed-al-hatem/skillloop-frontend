@@ -2,6 +2,7 @@
 // Mocks are never exported from here (they stay out of the production bundle).
 export { bookingKeys } from './api/bookings.keys';
 export { useBooking, useBookings } from './api/bookings.queries';
+export { bookingsRoutes } from './routes';
 export {
   BOOKING_STATUS_LABELS,
   BOOKING_STATUS_VARIANTS,
