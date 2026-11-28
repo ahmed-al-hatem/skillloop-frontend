@@ -2,7 +2,8 @@
 // Mocks are never exported here, so fake data stays out of the production bundle.
 export { serviceKeys } from './api/services.keys';
 export { useArchiveService, useServices } from './api/services.queries';
-export { serviceStatusBadge } from './constants';
+export { hiddenServiceBadge, serviceStatusBadge } from './constants';
+export { servicesRoutes } from './routes';
 export {
   ARCHIVE_REASON_MAX,
   ARCHIVE_REASON_MIN,
