@@ -6,6 +6,17 @@ export const membersRoutes: RouteObject[] = [
   {
     path: ROUTES.admin.members,
     handle: { crumb: 'الأعضاء' },
-    lazy: () => import('./pages/MembersPage').then((m) => ({ Component: m.MembersPage })),
+    children: [
+      {
+        index: true,
+        lazy: () => import('./pages/MembersPage').then((m) => ({ Component: m.MembersPage })),
+      },
+      {
+        path: ROUTES.admin.member(':id'),
+        handle: { crumb: 'تفاصيل العضو' },
+        lazy: () =>
+          import('./pages/MemberDetailPage').then((m) => ({ Component: m.MemberDetailPage })),
+      },
+    ],
   },
 ];
