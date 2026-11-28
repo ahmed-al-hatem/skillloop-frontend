@@ -1,9 +1,9 @@
 import { RelativeTime } from '@/shared/components/ui/RelativeTime';
-import { cn } from '@/shared/lib/cn';
 import { getResponseState } from '../lib/responseState';
 import type { AdminDispute } from '../schemas/dispute.schema';
 import { EvidenceGallery } from './EvidenceGallery';
 import { PartyHeading } from './PartyHeading';
+import { ResponseCountdown } from './ResponseCountdown';
 
 export type ProviderReplyCardProps = {
   dispute: AdminDispute;
@@ -50,15 +50,12 @@ function NoReply({ dispute, now }: ProviderReplyCardProps) {
       <p className="text-sm font-semibold text-muted-foreground">
         {isOpen ? 'لم يرد بعد' : 'لم يرد مقدم الخدمة'}
       </p>
-      {/* Plan 3.6 adds the live countdown and the resolve lock here. */}
-      {isOpen && due && (
-        <p
-          className={cn(
-            'text-xs',
-            isOverdue ? 'font-semibold text-danger' : 'text-muted-foreground',
-          )}
-        >
-          {isOverdue ? 'انتهت مهلة الرد' : 'تنتهي مهلة الرد'} <RelativeTime value={due} />
+      {isOpen && due && !isOverdue && (
+        <ResponseCountdown disputeId={dispute.id} openedAt={dispute.createdAt} dueAt={due} />
+      )}
+      {isOpen && due && isOverdue && (
+        <p className="text-xs font-semibold text-danger">
+          انتهت مهلة الرد <RelativeTime value={due} />
         </p>
       )}
     </div>

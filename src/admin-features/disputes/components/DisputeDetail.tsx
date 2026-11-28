@@ -6,6 +6,7 @@ import { DisputeHeader } from './DisputeHeader';
 import { DisputeTimelineCard } from './DisputeTimelineCard';
 import { PartiesRatingsCard } from './PartiesRatingsCard';
 import { ProviderReplyCard } from './ProviderReplyCard';
+import { ResolvedCard } from './ResolvedCard';
 import { ResolveForm } from './ResolveForm';
 
 export type DisputeDetailProps = {
@@ -28,9 +29,10 @@ export function DisputeDetail({ dispute, now }: DisputeDetailProps) {
         <DisputeTimelineCard dispute={dispute} now={now} />
         <PartiesRatingsCard dispute={dispute} />
       </div>
-      {/* The read-only resolved view follows in the next PR (plan 3.6). */}
-      {dispute.status === 'OPEN' && (
+      {dispute.status === 'OPEN' ? (
         <ResolveForm dispute={dispute} locked={isResolveLocked(dispute, now)} />
+      ) : (
+        <ResolvedCard dispute={dispute} />
       )}
     </>
   );
