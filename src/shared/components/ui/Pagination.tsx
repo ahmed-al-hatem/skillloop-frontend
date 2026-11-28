@@ -89,17 +89,26 @@ export function Pagination({ meta, onPageChange, className }: PaginationProps) {
             onClick={() => item !== page && onPageChange(item)}
             className={cn(
               itemClass,
+              'max-sm:hidden',
               item === page ? 'bg-foreground font-semibold text-background' : idleClass,
             )}
           >
             {item}
           </button>
         ) : (
-          <span key={item} aria-hidden="true" className="px-1 text-muted-foreground">
+          <span key={item} aria-hidden="true" className="px-1 text-muted-foreground max-sm:hidden">
             …
           </span>
         ),
       )}
+
+      {/* Phones: "100 / 196" instead of the numbered buttons, so the footer stays on one row. */}
+      <p className="px-2 font-latin text-[13px] text-foreground tabular-nums sm:hidden">
+        <span className="sr-only">الصفحة </span>
+        <bdi dir="ltr">
+          {page} / {pageCount}
+        </bdi>
+      </p>
 
       <button
         type="button"
