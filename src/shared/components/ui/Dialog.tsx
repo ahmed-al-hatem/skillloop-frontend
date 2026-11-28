@@ -1,13 +1,5 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  type KeyboardEvent,
-  type MouseEvent,
-  type ReactNode,
-  type RefObject,
-  type SyntheticEvent,
-} from 'react';
+import { useId, type ReactNode, type RefObject } from 'react';
+import { useModalDialog } from '@/shared/hooks/useModalDialog';
 import { cn } from '@/shared/lib/cn';
 
 const sizes = {
@@ -67,81 +59,25 @@ export function Dialog({
   role = 'dialog',
   className,
 }: DialogProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const pressedOnBackdrop = useRef(false);
+  const dialogProps = useModalDialog({
+    open,
+    onOpenChange,
+    dismissible,
+    closeOnBackdropClick,
+    initialFocusRef,
+  });
   const titleId = useId();
   const descriptionId = useId();
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!open || !dialog) return;
-
-    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const root = document.documentElement;
-    dialog.showModal();
-    initialFocusRef?.current?.focus();
-    root.classList.add('overflow-hidden');
-
-    return () => {
-      dialog.close();
-      // Keep the page locked while another dialog is still open (nested dialogs).
-      if (!document.querySelector('dialog[open]')) root.classList.remove('overflow-hidden');
-      trigger?.focus();
-    };
-  }, [open, initialFocusRef]);
-
-  function requestClose() {
-    if (dismissible) onOpenChange(false);
-  }
-
-  // Handle Esc ourselves so the browser never closes the dialog behind React's back.
-  function handleKeyDown(event: KeyboardEvent<HTMLDialogElement>) {
-    if (event.key !== 'Escape') return;
-    event.preventDefault();
-    event.stopPropagation();
-    requestClose();
-  }
-
-  function handleCancel(event: SyntheticEvent<HTMLDialogElement>) {
-    event.preventDefault();
-    requestClose();
-  }
-
-  // If the browser still closed it (e.g. repeated Esc), re-sync with the `open` prop.
-  function handleClose() {
-    const dialog = dialogRef.current;
-    // Already open again: a stale event from our own close() (StrictMode remount).
-    if (!open || !dialog || dialog.open) return;
-    if (dismissible) onOpenChange(false);
-    else dialog.showModal();
-  }
-
-  // The <dialog> fills the viewport, so a click whose target is the dialog itself
-  // landed outside the panel. Both press and release must be outside (no drag-out).
-  function handleMouseDown(event: MouseEvent<HTMLDialogElement>) {
-    pressedOnBackdrop.current = event.target === event.currentTarget;
-  }
-
-  function handleClick(event: MouseEvent<HTMLDialogElement>) {
-    const outside = pressedOnBackdrop.current && event.target === event.currentTarget;
-    pressedOnBackdrop.current = false;
-    if (outside && closeOnBackdropClick) requestClose();
-  }
 
   if (!open) return null;
 
   return (
     <dialog
-      ref={dialogRef}
+      {...dialogProps}
       role={role}
       aria-modal="true"
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
-      onKeyDown={handleKeyDown}
-      onCancel={handleCancel}
-      onClose={handleClose}
-      onMouseDown={handleMouseDown}
-      onClick={handleClick}
       className={cn(
         'fixed inset-0 m-0 grid size-full max-h-none max-w-none place-items-center overflow-y-auto bg-transparent p-4 text-foreground',
         'backdrop:bg-background/75 light:backdrop:bg-foreground/40',
