@@ -12,7 +12,7 @@ src/
 │   ├── router.tsx        # collects the routes of every feature
 │   └── layouts/          # MainLayout (header), AuthLayout (centered card)
 ├── admin-features/       # admin dashboard (/admin/*) — same layout and rules as features/
-│   └── core/             # admin shell: layout, guard, nav, adminRoutes (planned)
+│   └── core/             # admin shell: adminRoutes, nav.config (layout + guard coming)
 ├── features/
 │   └── auth/             # empty folder skeleton — features are built from Figma + openapi.yaml
 ├── shared/               # shared by everyone, knows nothing about features or admin-features
