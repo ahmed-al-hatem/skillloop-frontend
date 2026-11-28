@@ -7,3 +7,6 @@ export const memberKeys = {
   list: (params: MemberListParams) => [...memberKeys.lists(), params] as const,
   detail: (id: string) => [...memberKeys.all, 'detail', id] as const,
 };
+
+/** Dashboard counters (owned by the overview feature) — refreshed after member mutations. */
+export const adminDashboardKey = ['admin', 'dashboard'] as const;
