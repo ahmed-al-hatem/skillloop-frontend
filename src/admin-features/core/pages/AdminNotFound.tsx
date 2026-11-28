@@ -5,7 +5,7 @@ import { ROUTES } from '@/shared/constants/routes';
 /** Any unknown `/admin/*` URL. */
 export function AdminNotFound() {
   return (
-    <main className="mx-auto max-w-3xl p-6">
+    <div className="mx-auto max-w-3xl p-6">
       <EmptyState
         title="الصفحة غير موجودة"
         description="404"
@@ -18,6 +18,6 @@ export function AdminNotFound() {
           </Link>
         }
       />
-    </main>
+    </div>
   );
 }
