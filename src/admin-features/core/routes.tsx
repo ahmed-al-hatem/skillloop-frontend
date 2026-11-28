@@ -1,6 +1,7 @@
 import type { RouteObject } from 'react-router';
 import { disputesRoutes } from '@/admin-features/disputes';
 import { overviewRoutes } from '@/admin-features/overview';
+import { servicesRoutes } from '@/admin-features/services';
 import { ROUTES } from '@/shared/constants/routes';
 
 /** Route `handle` read by the admin topbar (breadcrumb) and `document.title`. */
@@ -29,6 +30,7 @@ export const adminRoutes: RouteObject[] = [
         children: [
           ...disputesRoutes,
           ...overviewRoutes,
+          ...servicesRoutes,
           {
             path: '*',
             handle: { crumb: 'الصفحة غير موجودة' } satisfies AdminRouteHandle,
