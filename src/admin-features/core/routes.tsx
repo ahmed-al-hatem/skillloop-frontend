@@ -1,6 +1,7 @@
 import type { RouteObject } from 'react-router';
 import { bookingsRoutes } from '@/admin-features/bookings';
 import { disputesRoutes } from '@/admin-features/disputes';
+import { membersRoutes } from '@/admin-features/members';
 import { overviewRoutes } from '@/admin-features/overview';
 import { ROUTES } from '@/shared/constants/routes';
 
@@ -30,6 +31,7 @@ export const adminRoutes: RouteObject[] = [
         children: [
           ...bookingsRoutes,
           ...disputesRoutes,
+          ...membersRoutes,
           ...overviewRoutes,
           {
             path: '*',

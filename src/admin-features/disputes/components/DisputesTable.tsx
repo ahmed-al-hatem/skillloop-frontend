@@ -11,6 +11,7 @@ import {
   RESPONSE_STATE_LABELS,
   RESPONSE_STATE_VARIANTS,
 } from '../constants';
+import { formatEntityRef } from '../lib/entityRef';
 import { getResponseState, isPastResponseWindow } from '../lib/responseState';
 import type { AdminDispute, DisputeStatus } from '../schemas/dispute.schema';
 
@@ -31,9 +32,6 @@ const EMPTY = {
   RESOLVED: { title: 'لا توجد نزاعات محلولة بعد.', description: undefined },
 } as const satisfies Record<DisputeStatus, { title: string; description?: string }>;
 
-/** «#D-1042» from the 🟡 `code`; the start of the id until the backend sends it. */
-const disputeLabel = (d: AdminDispute) => `#${d.code ?? d.id.slice(0, 8)}`;
-
 function buildColumns(status: DisputeStatus, now: number): DataTableColumn<AdminDispute>[] {
   const isOpen = status === 'OPEN';
   return [
@@ -43,7 +41,7 @@ function buildColumns(status: DisputeStatus, now: number): DataTableColumn<Admin
       width: 'w-28',
       cell: (d) => (
         <bdi dir="ltr" className="font-latin font-semibold whitespace-nowrap">
-          {disputeLabel(d)}
+          {formatEntityRef(d)}
         </bdi>
       ),
     },
@@ -130,7 +128,7 @@ function buildColumns(status: DisputeStatus, now: number): DataTableColumn<Admin
       cell: (d) => (
         <Link
           to={ROUTES.admin.dispute(d.id)}
-          aria-label={`${isOpen ? 'مراجعة' : 'عرض'} النزاع ${disputeLabel(d)}`}
+          aria-label={`${isOpen ? 'مراجعة' : 'عرض'} النزاع ${formatEntityRef(d)}`}
           className="font-semibold text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {isOpen ? 'مراجعة' : 'عرض'}
