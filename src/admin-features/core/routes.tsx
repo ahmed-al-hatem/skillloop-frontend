@@ -1,4 +1,5 @@
 import type { RouteObject } from 'react-router';
+import { membersRoutes } from '@/admin-features/members';
 import { overviewRoutes } from '@/admin-features/overview';
 import { ROUTES } from '@/shared/constants/routes';
 
@@ -26,6 +27,7 @@ export const adminRoutes: RouteObject[] = [
       {
         lazy: () => import('./components/AdminLayout').then((m) => ({ Component: m.AdminLayout })),
         children: [
+          ...membersRoutes,
           ...overviewRoutes,
           {
             path: '*',

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { RoleSchema } from '@/features/auth';
 import type { PageParams } from '@/shared/api/types';
+import { listParamsShape } from '@/shared/hooks/useListParams';
 
 /* Schemas copied from openapi.yaml (components/schemas, tag "Admin: Members"). */
 
@@ -68,6 +69,13 @@ export const AdminUserDetailsSchema = AdminUserListItemSchema.extend({
   recentTransactions: z.array(WalletTransactionSchema),
 });
 export type AdminUserDetails = z.infer<typeof AdminUserDetailsSchema>;
+
+/** List filters + paging kept in the URL by `useListParams` (`/admin/members?q=&status=&page=`). */
+export const MemberListUrlParamsSchema = z.object({
+  ...listParamsShape,
+  q: z.string().default(''),
+  status: UserStatusSchema.optional(),
+});
 
 /** Query of `GET /admin/users`. `q` matches name, email or phone. */
 export type MemberListParams = PageParams & {
