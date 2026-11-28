@@ -1,4 +1,5 @@
 import type { RouteObject } from 'react-router';
+import { bookingsRoutes } from '@/admin-features/bookings';
 import { disputesRoutes } from '@/admin-features/disputes';
 import { overviewRoutes } from '@/admin-features/overview';
 import { ROUTES } from '@/shared/constants/routes';
@@ -27,6 +28,7 @@ export const adminRoutes: RouteObject[] = [
       {
         lazy: () => import('./components/AdminLayout').then((m) => ({ Component: m.AdminLayout })),
         children: [
+          ...bookingsRoutes,
           ...disputesRoutes,
           ...overviewRoutes,
           {
