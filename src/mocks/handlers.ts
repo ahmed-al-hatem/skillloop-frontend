@@ -1,7 +1,9 @@
 import type { RequestHandler } from 'msw';
+import { bookingsAdminHandlers } from '@/admin-features/bookings/mocks/bookings.handlers';
 import { disputesAdminHandlers } from '@/admin-features/disputes/mocks/disputes.handlers';
 import { membersAdminHandlers } from '@/admin-features/members/mocks/members.handlers';
 import { overviewAdminHandlers } from '@/admin-features/overview/mocks/overview.handlers';
+import { servicesAdminHandlers } from '@/admin-features/services/mocks/services.handlers';
 import { authHandlers } from '@/features/auth/mocks/auth.handlers';
 
 /**
@@ -11,7 +13,9 @@ import { authHandlers } from '@/features/auth/mocks/auth.handlers';
  */
 export const handlers: RequestHandler[] = [
   ...authHandlers,
+  ...bookingsAdminHandlers,
   ...disputesAdminHandlers,
   ...membersAdminHandlers,
   ...overviewAdminHandlers,
+  ...servicesAdminHandlers,
 ];
