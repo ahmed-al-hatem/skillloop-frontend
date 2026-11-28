@@ -81,9 +81,11 @@ function buildBooking(n: number): AdminBookingDetails {
   const provider = people[(n + 3) % people.length];
   const createdHours = 6 + n * 9;
   const path = PATHS[status];
+  // Hours between two events, small enough that the last one is still in the past.
+  const step = Math.min(4, createdHours / (path.length + 1));
   const at = (status: BookingStatus) => {
     const i = path.indexOf(status);
-    return i === -1 ? null : ago(createdHours - (i + 1) * 4);
+    return i === -1 ? null : ago(createdHours - (i + 1) * step);
   };
   const events = (['PENDING', ...path] as BookingStatus[]).map((toStatus, i): BookingEvent => {
     const actorRole =
@@ -97,7 +99,7 @@ function buildBooking(n: number): AdminBookingDetails {
       actorRole,
       actor: actorRole === 'ADMIN' ? null : UserSummarySchema.parse(actor),
       note: null,
-      createdAt: ago(createdHours - i * 4),
+      createdAt: ago(createdHours - i * step),
     };
   });
   const isSession = serviceType === 'SESSION';

@@ -1,3 +1,4 @@
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import { ClearFiltersButton } from '@/shared/components/ClearFiltersButton';
 import { ErrorState } from '@/shared/components/ErrorState';
 import { FilterBar } from '@/shared/components/FilterBar';
@@ -5,6 +6,7 @@ import { PageSizeSelect } from '@/shared/components/ui/PageSizeSelect';
 import { Pagination } from '@/shared/components/ui/Pagination';
 import { RangeText } from '@/shared/components/ui/RangeText';
 import { Select, type SelectOption } from '@/shared/components/ui/Select';
+import { ROUTES } from '@/shared/constants/routes';
 import { useListParams } from '@/shared/hooks/useListParams';
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus';
 import { useBookings } from '../api/bookings.queries';
@@ -19,11 +21,16 @@ const STATUS_OPTIONS: SelectOption<BookingStatus | typeof ALL>[] = [
   ...BOOKING_STATUSES.map((status) => ({ value: status, label: BOOKING_STATUS_LABELS[status] })),
 ];
 
-/** `/admin/bookings?status=`: every booking, newest first, read-only. Filter and page live in the URL. */
+/**
+ * `/admin/bookings?status=`: every booking, newest first, read-only. Filter and page live in the
+ * URL. `/admin/bookings/:id` opens the detail drawer (the `Outlet`) over the list.
+ */
 export function BookingsPage() {
   const { params, setParams, setPage, reset } = useListParams(BookingListParamsSchema);
   const bookings = useBookings(params);
   const isOnline = useOnlineStatus();
+  const navigate = useNavigate();
+  const { search } = useLocation();
   const { data } = bookings;
   // Offline before the first load: the query is paused, so say why instead of a skeleton.
   const isPausedEmpty = bookings.isPending && bookings.fetchStatus === 'paused';
@@ -74,6 +81,13 @@ export function BookingsPage() {
           isLoading={isLoading}
           isFiltered={isFiltered}
           onClearFilters={reset}
+          search={search}
+          onOpen={(id) =>
+            void navigate(
+              { pathname: ROUTES.admin.booking(id), search },
+              { state: { fromList: true } },
+            )
+          }
           footer={
             data &&
             !isLoading && (
@@ -91,6 +105,8 @@ export function BookingsPage() {
           }
         />
       )}
+
+      <Outlet />
     </div>
   );
 }
