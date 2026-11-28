@@ -1,6 +1,9 @@
 import type { AdminDispute } from '../schemas/dispute.schema';
+import { BookingSummaryCard } from './BookingSummaryCard';
 import { ClaimCard } from './ClaimCard';
 import { DisputeHeader } from './DisputeHeader';
+import { DisputeTimelineCard } from './DisputeTimelineCard';
+import { PartiesRatingsCard } from './PartiesRatingsCard';
 import { ProviderReplyCard } from './ProviderReplyCard';
 
 export type DisputeDetailProps = {
@@ -17,6 +20,11 @@ export function DisputeDetail({ dispute, now }: DisputeDetailProps) {
       <div className="grid gap-4 lg:grid-cols-2">
         <ClaimCard dispute={dispute} />
         <ProviderReplyCard dispute={dispute} now={now} />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <BookingSummaryCard dispute={dispute} />
+        <DisputeTimelineCard dispute={dispute} now={now} />
+        <PartiesRatingsCard dispute={dispute} />
       </div>
       {/* Plan 3.6: the resolve form (open) or the resolved view (resolved) goes here. */}
     </>

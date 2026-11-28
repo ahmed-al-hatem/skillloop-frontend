@@ -1,10 +1,10 @@
 import { Link } from 'react-router';
+import { BOOKING_STATUS_LABELS } from '@/admin-features/disputes';
 import { BarChart, type BarChartItem } from '@/shared/components/BarChart';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { Skeleton } from '@/shared/components/ui/Skeleton';
 import { ROUTES } from '@/shared/constants/routes';
 import { formatNumber } from '@/shared/lib/format';
-import { BOOKING_STATUS_LABELS } from '../constants';
 import type { AdminDashboard } from '../schemas/dashboard.schema';
 
 const knownStatuses = Object.keys(BOOKING_STATUS_LABELS) as (keyof typeof BOOKING_STATUS_LABELS)[];
