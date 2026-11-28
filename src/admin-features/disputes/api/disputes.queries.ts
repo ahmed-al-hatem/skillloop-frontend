@@ -44,5 +44,11 @@ export function useResolveDispute() {
         queryClient.invalidateQueries({ queryKey: adminDashboardKey }),
       ]);
     },
+    // 409: the dispute changed meanwhile (already resolved, or the window is still open): refetch.
+    onError: (error, { id }) => {
+      if (error instanceof ApiRequestError && error.status === 409) {
+        void queryClient.invalidateQueries({ queryKey: disputeKeys.detail(id) });
+      }
+    },
   });
 }

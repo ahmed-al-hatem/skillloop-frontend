@@ -61,7 +61,14 @@ export const disputesAdminHandlers = [
       !dispute.providerRespondedAt &&
       Date.now() - Date.parse(dispute.createdAt) < RESPONSE_WINDOW_MS;
     if (dispute.status === 'RESOLVED' || windowOpen) {
-      return apiError('INVALID_STATE_TRANSITION', 409);
+      return apiError(
+        'INVALID_STATE_TRANSITION',
+        409,
+        undefined,
+        dispute.status === 'RESOLVED'
+          ? 'تم حل هذا النزاع مسبقاً.'
+          : 'لا يمكن حل النزاع قبل رد مقدم الخدمة أو انتهاء مهلة الرد.',
+      );
     }
 
     const now = new Date().toISOString();

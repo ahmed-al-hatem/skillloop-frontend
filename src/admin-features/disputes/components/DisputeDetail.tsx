@@ -1,3 +1,4 @@
+import { isResolveLocked } from '../lib/responseState';
 import type { AdminDispute } from '../schemas/dispute.schema';
 import { BookingSummaryCard } from './BookingSummaryCard';
 import { ClaimCard } from './ClaimCard';
@@ -5,6 +6,7 @@ import { DisputeHeader } from './DisputeHeader';
 import { DisputeTimelineCard } from './DisputeTimelineCard';
 import { PartiesRatingsCard } from './PartiesRatingsCard';
 import { ProviderReplyCard } from './ProviderReplyCard';
+import { ResolveForm } from './ResolveForm';
 
 export type DisputeDetailProps = {
   dispute: AdminDispute;
@@ -26,7 +28,10 @@ export function DisputeDetail({ dispute, now }: DisputeDetailProps) {
         <DisputeTimelineCard dispute={dispute} now={now} />
         <PartiesRatingsCard dispute={dispute} />
       </div>
-      {/* Plan 3.6: the resolve form (open) or the resolved view (resolved) goes here. */}
+      {/* The read-only resolved view follows in the next PR (plan 3.6). */}
+      {dispute.status === 'OPEN' && (
+        <ResolveForm dispute={dispute} locked={isResolveLocked(dispute, now)} />
+      )}
     </>
   );
 }
