@@ -1,11 +1,12 @@
 import type { AdminUserDetails } from '../schemas/member.schema';
+import { MemberActivityTabs } from './MemberActivityTabs';
 import { MemberHeader } from './MemberHeader';
 import { TransactionsCard } from './TransactionsCard';
 import { WalletCard } from './WalletCard';
 
 export type MemberDetailProps = { member: AdminUserDetails };
 
-/** The loaded member: profile header, wallet beside the last 20 transactions. */
+/** The loaded member: profile header, wallet beside the last 20 transactions, activity tabs. */
 export function MemberDetail({ member }: MemberDetailProps) {
   return (
     <>
@@ -15,7 +16,7 @@ export function MemberDetail({ member }: MemberDetailProps) {
         <WalletCard member={member} />
         <TransactionsCard transactions={member.recentTransactions} className="lg:col-span-2" />
       </div>
-      {/* Part 2 of #89: bookings / services tabs (`?tab=`) go here. */}
+      <MemberActivityTabs memberId={member.id} />
     </>
   );
 }
