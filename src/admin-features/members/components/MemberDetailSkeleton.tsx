@@ -1,6 +1,6 @@
 import { Skeleton } from '@/shared/components/ui/Skeleton';
 
-/** Loading placeholder in the shape of the detail page: profile, wallet + transactions. */
+/** Loading placeholder in the shape of the detail page: profile, wallet + transactions, tabs. */
 export function MemberDetailSkeleton() {
   return (
     <div aria-busy="true" className="flex flex-col gap-4">
@@ -19,6 +19,7 @@ export function MemberDetailSkeleton() {
         <Skeleton className="h-52 rounded-2xl" />
         <Skeleton className="h-52 rounded-2xl lg:col-span-2" />
       </div>
+      <Skeleton className="h-48 rounded-2xl" />
     </div>
   );
 }
