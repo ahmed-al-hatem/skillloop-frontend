@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'msw';
+import { membersAdminHandlers } from '@/admin-features/members/mocks/members.handlers';
 import { authHandlers } from '@/features/auth/mocks/auth.handlers';
 
 /**
@@ -6,4 +7,4 @@ import { authHandlers } from '@/features/auth/mocks/auth.handlers';
  * Handlers are imported from features/<f>/mocks/ directly (not via index.ts),
  * so mock data never ends up in the production bundle.
  */
-export const handlers: RequestHandler[] = [...authHandlers];
+export const handlers: RequestHandler[] = [...authHandlers, ...membersAdminHandlers];
