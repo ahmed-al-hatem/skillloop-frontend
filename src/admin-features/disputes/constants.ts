@@ -1,4 +1,5 @@
 import type { StatusBadgeVariant } from '@/shared/components/ui/StatusBadge';
+import type { ResponseState } from './lib/responseState';
 import type { DisputeDecision, DisputeReason, DisputeStatus } from './schemas/dispute.schema';
 
 /** `adminNote` limits from `ResolveDisputeRequest` in openapi.yaml. */
@@ -28,3 +29,16 @@ export const DISPUTE_DECISION_LABELS = {
   PAY_PROVIDER: 'تحويل النقاط لمقدّم الخدمة',
   SPLIT: 'تقسيم النقاط',
 } as const satisfies Record<DisputeDecision, string>;
+
+/** Provider reply column of the open-disputes table. */
+export const RESPONSE_STATE_LABELS = {
+  responded: 'تم الرد',
+  overdue: 'لم يرد · انتهت المهلة',
+  waiting: 'بانتظار الرد',
+} as const satisfies Record<ResponseState, string>;
+
+export const RESPONSE_STATE_VARIANTS = {
+  responded: 'success',
+  overdue: 'danger',
+  waiting: 'warning',
+} as const satisfies Record<ResponseState, StatusBadgeVariant>;
