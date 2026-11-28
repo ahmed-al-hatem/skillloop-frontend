@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router';
+import { adminRoutes } from '@/admin-features/core';
 import { authRoutes } from '@/features/auth';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { AuthLayout } from './layouts/AuthLayout';
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [...authRoutes],
   },
+  ...adminRoutes,
   {
     element: <MainLayout />,
     children: [

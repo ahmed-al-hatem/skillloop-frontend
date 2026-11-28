@@ -14,7 +14,7 @@ src/
 │   ├── router.tsx        # بيجمع routes كل feature
 │   └── layouts/          # MainLayout (هيدر)، AuthLayout (كرت بالنص)
 ├── admin-features/       # لوحة الأدمن (/admin/*)، نفس ترتيب وقواعد features/
-│   └── core/             # هيكل الأدمن: layout، guard، القائمة، adminRoutes (مخطط له)
+│   └── core/             # هيكل الأدمن: adminRoutes، nav.config (الـ layout والـ guard جايين)
 ├── features/
 │   └── auth/             # هيكل مجلدات فاضي، والـ features منبنيها من Figma و openapi.yaml
 ├── shared/               # مشترك للكل، وما بيعرف شي عن الـ features ولا admin-features
