@@ -21,6 +21,7 @@ import {
   RESOLVE_DECISION_OPTIONS,
   RESOLVE_GATE_TEXT,
 } from '../constants';
+import { formatCountdown, useCountdown } from '../hooks/useCountdown';
 import { formatEntityRef } from '../lib/entityRef';
 import { previewSplit } from '../lib/resolvePreview';
 import type { AdminDispute, DisputeDecision } from '../schemas/dispute.schema';
@@ -68,6 +69,8 @@ export function ResolveForm({ dispute, locked }: ResolveFormProps) {
   const ref = formatEntityRef(dispute);
   const offline = !isOnline;
   const canSubmit = isValid && !locked && !offline;
+  // Time left in the reply window, for the lock text (🟡 due date; hidden without it).
+  const remaining = useCountdown(locked ? dispute.providerResponseDueAt : undefined);
   const gate = locked ? 'locked' : offline ? 'offline' : isValid ? 'ready' : 'incomplete';
 
   const confirm = async () => {
@@ -203,6 +206,16 @@ export function ResolveForm({ dispute, locked }: ResolveFormProps) {
             )}
           >
             {RESOLVE_GATE_TEXT[gate]}
+            {gate === 'locked' && remaining ? (
+              <>
+                {' '}
+                متبقٍ{' '}
+                <span dir="ltr" className="font-latin tabular-nums">
+                  {formatCountdown(remaining)}
+                </span>
+                .
+              </>
+            ) : null}
           </p>
           <Button
             type="submit"
