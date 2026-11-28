@@ -5,6 +5,7 @@ export {
   useAdminCounters,
   useAdminDashboard,
 } from './api/overview.queries';
+export { overviewRoutes } from './routes';
 export {
   AdminDashboardSchema,
   type AdminCounters,

@@ -1,4 +1,5 @@
 import type { RouteObject } from 'react-router';
+import { overviewRoutes } from '@/admin-features/overview';
 import { ROUTES } from '@/shared/constants/routes';
 
 /** Route `handle` read by the admin topbar (breadcrumb) and `document.title`. */
@@ -25,14 +26,7 @@ export const adminRoutes: RouteObject[] = [
       {
         lazy: () => import('./components/AdminLayout').then((m) => ({ Component: m.AdminLayout })),
         children: [
-          {
-            index: true,
-            handle: { crumb: 'الرئيسية' } satisfies AdminRouteHandle,
-            lazy: () =>
-              import('./pages/AdminHomePlaceholder').then((m) => ({
-                Component: m.AdminHomePlaceholder,
-              })),
-          },
+          ...overviewRoutes,
           {
             path: '*',
             handle: { crumb: 'الصفحة غير موجودة' } satisfies AdminRouteHandle,
