@@ -1,4 +1,5 @@
 // Public API of the admin core (shell). Other code imports ONLY from '@/admin-features/core'.
+export { adminAuthHandlers } from './hooks/useAdminAuthEvent';
 export {
   adminNav,
   adminNavGroups,
