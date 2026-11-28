@@ -102,3 +102,30 @@ export const RESPONSE_STATE_VARIANTS = {
   overdue: 'danger',
   waiting: 'warning',
 } as const satisfies Record<ResponseState, StatusBadgeVariant>;
+
+/** Decision cards of the resolve form (the list keeps `DISPUTE_DECISION_LABELS`). */
+export const RESOLVE_DECISION_OPTIONS = {
+  REFUND_RECEIVER: {
+    label: 'استرداد للمستلم 100%',
+    description: (receiver: string) => `تعود النقاط كاملة إلى ${receiver}`,
+  },
+  PAY_PROVIDER: {
+    label: 'دفع لمقدم الخدمة',
+    description: (_receiver: string, provider: string) => `تُحوَّل النقاط كاملة إلى ${provider}`,
+  },
+  SPLIT: {
+    label: 'تقسيم',
+    description: () => 'نسبة للمستلم من 1 إلى 99%',
+  },
+} as const satisfies Record<
+  DisputeDecision,
+  { label: string; description: (receiver: string, provider: string) => string }
+>;
+
+/** Line next to the resolve button: why it is disabled, or that it is ready. */
+export const RESOLVE_GATE_TEXT = {
+  locked: 'زر الحل معطّل حتى يرد مقدم الخدمة أو تنتهي مهلة 48 ساعة.',
+  offline: 'لا يمكن حل النزاع دون اتصال بالإنترنت.',
+  incomplete: `اختر القرار واكتب ملاحظة من ${ADMIN_NOTE_MIN} إلى ${ADMIN_NOTE_MAX} حرف لتفعيل الحل.`,
+  ready: 'جاهز للحل.',
+} as const;

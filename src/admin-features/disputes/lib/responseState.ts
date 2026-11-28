@@ -22,3 +22,13 @@ export function isPastResponseWindow(dispute: AdminDispute, now: number): boolea
   const due = dispute.providerResponseDueAt;
   return due !== undefined && Date.parse(due) <= now;
 }
+
+/**
+ * Whether the resolve button is locked. The backend decides (🟡 `canResolve`); without it the
+ * lock follows the reply and the 🟡 due date, and with neither the UI doesn't lock (a 409 does).
+ */
+export function isResolveLocked(dispute: AdminDispute, now: number): boolean {
+  if (dispute.canResolve !== undefined) return !dispute.canResolve;
+  if (dispute.providerRespondedAt || dispute.providerResponseDueAt === undefined) return false;
+  return !isPastResponseWindow(dispute, now);
+}
