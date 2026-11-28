@@ -1,4 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ApiRequestError } from '@/shared/api/client';
+import { QUERY_RETRY } from '@/shared/constants/query';
 import type { PointsAdjustmentRequest, SuspendRequest } from '../schemas/member-forms.schema';
 import type { MemberListParams } from '../schemas/member.schema';
 import {
@@ -19,12 +21,14 @@ export function useMembers(params: MemberListParams) {
   });
 }
 
-/** One member with wallet counters and the last 20 transactions. */
+/** One member with wallet counters and the last 20 transactions. A 404 is final (no retry). */
 export function useMember(id: string | undefined) {
   return useQuery({
     queryKey: memberKeys.detail(id ?? ''),
     queryFn: () => getMember(id ?? ''),
     enabled: Boolean(id),
+    retry: (failureCount, error) =>
+      !(error instanceof ApiRequestError && error.status === 404) && failureCount < QUERY_RETRY,
   });
 }
 
