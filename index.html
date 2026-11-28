@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SkillLoop</title>
+    <!-- Apply the saved theme before first paint (no flash). Key: THEME_STORAGE_KEY in src/shared/hooks/useTheme.ts. -->
+    <script>
+      try {
+        if (localStorage.getItem('sl-theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    </script>
     <meta name="description" content="SkillLoop — مهارة بمهارة." />
     <meta name="theme-color" content="#2D2B35" />
 
